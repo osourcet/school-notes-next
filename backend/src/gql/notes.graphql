@@ -1,0 +1,196 @@
+query GetNotes($id: uuid!) {
+    schoolnotes_notes(where: { user: { id: { _eq: $id } } }) {
+        id
+        title
+        important
+        subject
+        date
+        content
+        done
+        last_modified
+        public
+    }
+    schoolnotes_read_only_notes(
+        where: {
+            _and: [
+                { user_id: { _eq: $id } }
+                { note: { public: { _eq: true } } }
+            ]
+        }
+    ) {
+        note {
+            id
+            title
+            important
+            subject
+            date
+            content
+            done
+            last_modified
+        }
+    }
+}
+
+query GetOwnNotes($id: uuid!) {
+    schoolnotes_notes(where: { user: { id: { _eq: $id } } }) {
+        id
+        title
+        important
+        subject
+        date
+        content
+        done
+        last_modified
+        public
+    }
+}
+
+query GetReadOnlyNotes($id: uuid!) {
+    schoolnotes_read_only_notes(
+        where: {
+            _and: [
+                { user_id: { _eq: $id } }
+                { note: { public: { _eq: true } } }
+            ]
+        }
+    ) {
+        note {
+            id
+            title
+            important
+            subject
+            date
+            content
+            done
+            last_modified
+        }
+    }
+}
+
+query GetLastModified($id: uuid!) {
+    schoolnotes_notes(
+        where: { user: { id: { _eq: $id } } }
+        limit: 1
+        order_by: { last_modified: asc }
+    ) {
+        last_modified
+    }
+    schoolnotes_read_only_notes(
+        where: {
+            _and: [
+                { user_id: { _eq: $id } }
+                { note: { public: { _eq: true } } }
+            ]
+        }
+        limit: 1
+        order_by: { note: { last_modified: desc } }
+    ) {
+        note {
+            last_modified
+        }
+    }
+}
+
+query GetPublicNotes {
+    schoolnotes_notes(where: { public: { _eq: true } }) {
+        id
+        title
+        important
+        subject
+        date
+        content
+        done
+        last_modified
+        public
+    }
+}
+
+query GetPublicNote($id: uuid!) {
+    schoolnotes_notes(
+        where: { _and: [{ public: { _eq: true } }, { id: { _eq: $id } }] }
+    ) {
+        id
+        title
+        important
+        subject
+        date
+        content
+        done
+        last_modified
+        public
+    }
+}
+
+mutation CreateNote(
+    $title: String!
+    $important: Boolean!
+    $subject: String!
+    $date: timestamptz!
+    $content: String!
+    $done: Boolean!
+    $owner: uuid!
+) {
+    insert_schoolnotes_notes_one(
+        object: {
+            title: $title
+            important: $important
+            subject: $subject
+            date: $date
+            content: $content
+            done: $done
+            owner: $owner
+        }
+    ) {
+        id
+    }
+}
+
+mutation StartShareNote($id: uuid!, $userId: uuid!) {
+    update_schoolnotes_notes(
+        where: { _and: [{ id: { _eq: $id } }, { owner: { _eq: $userId } }] }
+        _set: { public: true }
+    ) {
+        affected_rows
+    }
+}
+
+mutation StopShareNote($id: uuid!, $userId: uuid!) {
+    update_schoolnotes_notes(
+        where: { _and: [{ id: { _eq: $id } }, { owner: { _eq: $userId } }] }
+        _set: { public: false }
+    ) {
+        affected_rows
+    }
+    delete_schoolnotes_read_only_notes(where: { note_id: { _eq: $id } }) {
+        affected_rows
+    }
+}
+
+mutation AddSharedNote($id: uuid!, $userId: uuid!) {
+    insert_schoolnotes_read_only_notes_one(
+        object: { note_id: $id, user_id: $userId }
+    ) {
+        id
+    }
+}
+
+mutation RemoveSharedNote($id: uuid!, $userId: uuid!) {
+    delete_schoolnotes_read_only_notes(
+        where: {
+            _and: [{ user_id: { _eq: $userId } }, { note_id: { _eq: $id } }]
+        }
+    ) {
+        affected_rows
+    }
+}
+
+mutation DeleteNote($id: uuid!, $userId: uuid!) {
+    delete_schoolnotes_notes(
+        where: { _and: [{ owner: { _eq: $userId } }, { id: { _eq: $id } }] }
+    ) {
+        affected_rows
+    }
+    delete_schoolnotes_read_only_notes(where: { note_id: { _eq: $id } }) {
+        affected_rows
+    }
+}

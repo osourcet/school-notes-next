@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from './user.service';
-import { hash, compare } from 'bcrypt';
+import { hash } from 'bcrypt';
 
 @Controller('api/user')
 export class UserController {

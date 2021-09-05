@@ -116,3 +116,6 @@ production/
 
 # rest files
 *.rest
+
+# socket.io-client test
+client/

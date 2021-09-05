@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
+import { GqlClientService } from '../gql-client/gql-client.service';
 
 @Module({
     imports: [
@@ -15,7 +16,7 @@ import { JwtStrategy } from './jwt.strategy';
         }),
         PassportModule,
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy],
+    providers: [AuthService, LocalStrategy, JwtStrategy, GqlClientService],
     controllers: [AuthController],
     exports: [JwtModule],
 })

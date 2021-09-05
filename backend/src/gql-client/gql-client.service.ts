@@ -13,7 +13,10 @@ export class GqlClientService {
     private client: ApolloClient<any> | null;
 
     constructor() {
-        if (!!process.env.GQL_API_URL || !!process.env.GQL_API_KEY) {
+        if (
+            process.env.GQL_API_URL === undefined ||
+            process.env.GQL_API_KEY === undefined
+        ) {
             this.client = null;
             return;
         }
@@ -30,6 +33,7 @@ export class GqlClientService {
         });
     }
 
+    async query(query: DocumentNode): Promise<ApolloQueryResult<any>>;
     async query(
         query: DocumentNode,
         cache: boolean,

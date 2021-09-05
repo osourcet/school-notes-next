@@ -9,6 +9,9 @@ import { AuthModule } from './auth/auth.module';
 import { UserService } from './user/user.service';
 import { UserController } from './user/user.controller';
 import { GqlClientService } from './gql-client/gql-client.service';
+import { NotesService } from './notes/notes.service';
+import { NotesController } from './notes/notes.controller';
+import { NotesModule } from './notes/notes.module';
 
 @Module({
     imports: [
@@ -16,8 +19,20 @@ import { GqlClientService } from './gql-client/gql-client.service';
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, 'static'),
         }),
+        NotesModule,
     ],
-    controllers: [AppController, AuthController, UserController],
-    providers: [AppService, AuthService, UserService, GqlClientService],
+    controllers: [
+        AppController,
+        AuthController,
+        UserController,
+        NotesController,
+    ],
+    providers: [
+        AppService,
+        AuthService,
+        UserService,
+        GqlClientService,
+        NotesService,
+    ],
 })
 export class AppModule {}

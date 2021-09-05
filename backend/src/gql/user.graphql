@@ -11,3 +11,17 @@ mutation Register($email: String!, $password: String!, $username: String!) {
         id
     }
 }
+
+query Login($username: String!) {
+    schoolnotes_users(
+        where: {
+            _or: [
+                { email: { _eq: $username } }
+                { username: { _eq: $username } }
+            ]
+        }
+    ) {
+        id
+        password
+    }
+}
