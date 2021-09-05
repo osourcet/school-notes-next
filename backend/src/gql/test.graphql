@@ -1,0 +1,13 @@
+query GetUserId($username: String!) {
+    schoolnotes_users(where: { username: { _eq: $username } }) {
+        id
+    }
+}
+
+mutation Register($email: String!, $password: String!, $username: String!) {
+    insert_schoolnotes_users_one(
+        object: { email: $email, password: $password, username: $username }
+    ) {
+        id
+    }
+}

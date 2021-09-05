@@ -1,13 +1,37 @@
-import { Controller, Post, Redirect } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    Post,
+    Redirect,
+    Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { UserService } from './user.service';
+import { hash, compare } from 'bcrypt';
 
 @Controller('api/user')
 export class UserController {
     constructor(private userservice: UserService) {}
 
     @Post('register')
-    async register() {
-        await this.userservice.register();
+    async register(
+        @Body('username') username,
+        @Body('email') email,
+        @Body('password') password,
+        @Res() res: Response,
+    ) {
+        await this.userservice
+            .register({
+                username,
+                email,
+                password: await hash(password, process.env.SALT || ''),
+            })
+            .catch((err) => {
+                res.status(HttpStatus.FORBIDDEN).json({ error: err });
+            });
+
+        res.sendStatus(HttpStatus.CREATED);
     }
 
     @Post('login')

@@ -1,78 +1,34 @@
-# vueJS-vuetify-nestJS
+# School-Notes
 
-Template with frontend and backend for Linux/Unix + Docker
+[👉Template](https://github.com/felix-07-11/vueJS-vuetify-nestJS)
 
-## Requires (tested)
-
--   nodejs@14.17.4 or higher
--   yarn@1.22.11 or higher
--   @vue/cli@4.5.13 or higher
--   nest@8.1.0 or higher
-
-**Test and Build**
-
--   docker@20.10.8 or higher
--   bash@5.0.17(1)-release or higher
-
-## Frontend (Vue2 + Vuetify)
+## Useage
 
 ```sh
-# open the frontend folder
-cd frontend
+git clone https://github.com/osourcet/school-notes-next.git
 
-# test only forntend
-yarn serve
-```
+cd school-notes-next/
 
-### environment variables
-
-VUE_APP_API_URL: Api url in development mode (you must set yourself)
-VUE_APP_VERSION: Version from package.json
-
-### connection to backend
-
-In the Vuex store is a axios instance preconfigured with the VUE_APP_API_URL or `${protocol}//${hostname}/api/` in production mode
-
-## Backend (NestJS + GarphQL Client + basic auth service)
-
-```sh
-# open the backend folder
-cd backend
-
-# test only backend
-yarn start:dev
-```
-
-### Authentication
-
-You must define a method which validate the user who is trying to login. (/backend/src/auth/auth.service.ts)
-
-You can define user methods (register, reset password, change password, ...) in the user service / controller. (/backend/src/user)
-
-The pre-configured Auth Module needs 2 environment variables: SECRET (Json Web Token Secret) and EXPIRES_IN_SECONDS (How long the JWT is valid in seconds)
-
-### GarphQL client
-
-You can use the GarphQL Client if you use a Database which supports GrapthQL (eg. Hasura).
-
-The GarphQL service needs 2 environment variables: GQL_API_URL (URL to GQL Endpoint of an server) and GQL_API_KEY (Authorization)
-
-## Test
-
-```sh
-sh test.sh # Test runs at Port 8080
-
-# or
-
-sh test.sh 5000 # Test runs at Port 5000
-```
-
-If the docker container needs environment variables, you can create .env in the root folder of this project. This .env file will be loaded.
-
-## Production Build
-
-```sh
 sh production.sh
+
+docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:latest # App run on port 8080
 ```
 
-An dockerimage is build with the name PROJECTNAME:latest and the dockerimage is saved as PROJECTNAME_dockerimage.tar in root folder of this project.
+## Needed environment variables
+
+-   SECRET: JWT secret key
+-   EXPIRES_IN_SECONDS: how long the JWT is valid
+-   GQL_API_URL and GQL_API_KEY: if you want use a GraphQL Database
+
+## REST API Endpoints
+
+| Method | Path                     | Body                                                   | Http status code | Returns            |
+| ------ | ------------------------ | ------------------------------------------------------ | ---------------- | ------------------ |
+| GET    | /                        |                                                        | 200; 404         | frontend (VueJS)   |
+| POST   | /api/user/register       | { username: string; email: string; password: string; } | 201; 403         |                    |
+| POST   | /api/user/login          | { username: string; password: string; }                | 308              |                    |
+| POST   | /api/auth/login          | { username: string; password: string; }                | 200; 403         | { token: string; } |
+| POST   | /api/user/changepassword | { old: string; new:string }                            | 200; 403         |                    |
+
+<!-- | POST   | /api/user/resetpassword  | { token: string; password: string; }                   | 200; 403         |                    | -->
+<!-- | DELETE | /api/user                |                                                        | 200; 403         |                    | -->

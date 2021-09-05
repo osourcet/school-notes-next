@@ -1,9 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { GqlClientService } from 'src/gql-client/gql-client.service';
+import { Register } from 'src/gql/gql-interfaces';
 
 @Injectable()
 export class UserService {
-    async register() {
-        throw 'No register method defined'; // Replace this line with your register action
+    constructor(private gql: GqlClientService) {}
+
+    async register(user: {
+        username: string;
+        email: string;
+        password: string;
+    }) {
+        await this.gql.mutate(Register, user);
     }
 
     async resetPassword() {
