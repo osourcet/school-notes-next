@@ -89,6 +89,8 @@ export class NotesController {
         @Body() note: NoteIncoming,
         @Res() res: Response,
     ) {
+        console.log(note);
+
         const id = (await this.notesService
             .createNote(req.user.id, note)
             .catch((error) =>
