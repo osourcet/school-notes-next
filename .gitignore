@@ -107,6 +107,8 @@ dist
 *_dockerimage.tar
 
 # docker compose
+docker_compose.yml
+docker_compose.yaml
 *docker_compose.yml
 *docker_compose.yaml
 
