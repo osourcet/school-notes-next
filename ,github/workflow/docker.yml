@@ -1,0 +1,24 @@
+name: Build dockerimage
+
+on:
+  push:
+    branches:
+      - stable
+
+jobs:
+  publish-docker:
+    name: Build dockerimage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: install docker
+        uses: docker-practice/actions-setup-docker@master
+      - run: |
+          sh production.sh
+      - name: Updaload docker_image
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./school-noates-next_dockerimage.tar
+          tag: ${{ github.ref }}
