@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GqlClientService } from 'src/gql-client/gql-client.service';
 import { Note } from './note';
 import { NoteIncoming } from './note';
+import { GetPublicNoteQueryVariables } from '../gql/gql-interfaces';
 import {
     AddSharedNote,
     CreateNoteMutation,
@@ -168,7 +169,9 @@ export class NotesService {
             data: {
                 schoolnotes_notes: [note_db],
             },
-        } = (await this.gql.query(GetPublicNote)) as {
+        } = (await this.gql.query(GetPublicNote, {
+            id,
+        } as GetPublicNoteQueryVariables)) as {
             data: GetPublicNoteQuery;
         };
 
@@ -215,12 +218,10 @@ export class NotesService {
     //#region share Notes
 
     async startShareNote(user_id: string, note_id: string) {
-        const r = await this.gql.mutate(StartShareNote, {
+        await this.gql.mutate(StartShareNote, {
             id: note_id,
             userId: user_id,
         } as StartShareNoteMutationVariables);
-
-        console.log(r);
     }
 
     async stopShareNote(user_id: string, note_id: string) {

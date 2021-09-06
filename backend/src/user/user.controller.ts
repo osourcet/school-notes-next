@@ -24,22 +24,23 @@ export class UserController {
     ) {
         console.log(body);
 
-        await this.userservice
-            .register({
+        try {
+            await this.userservice.register({
                 username,
                 email,
                 password: await hash(password, process.env.SALT || ''),
-            })
-            .catch((err) => {
-                res.status(HttpStatus.FORBIDDEN).json({ error: err });
             });
-
-        res.sendStatus(HttpStatus.CREATED);
+            res.sendStatus(HttpStatus.CREATED);
+        } catch (error) {
+            res.status(HttpStatus.FORBIDDEN).json({ error });
+        }
     }
 
     @Post('login')
-    @Redirect('/api/auth/login', 308)
-    async login() {} // eslint-disable-line @typescript-eslint/no-empty-function
+    @Redirect('/api/auth/login', 301)
+    async login() {
+        return;
+    }
 
     @Post('resetpassword')
     async resetPassword() {

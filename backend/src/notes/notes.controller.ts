@@ -66,16 +66,21 @@ export class NotesController {
         return await this.notesService.getLastModified(req.user.id);
     }
 
-    @Get('public')
-    async getPublicNotes() {
-        return await this.notesService.getPublicNotes();
-    }
+    // @Get('public')
+    // async getPublicNotes() {
+    //     console.log('test');
+
+    //     console.log(await this.notesService.getPublicNotes());
+    // }
 
     @Get('public/:id')
     async getPublicNote(@Param('id') id: string, @Res() res: Response) {
-        return await this.notesService
-            .getPublicNote(id)
-            .catch((error) => res.status(HttpStatus.NOT_FOUND).json({ error }));
+        console.log('test2', id);
+        try {
+            res.json(await this.notesService.getPublicNote(id));
+        } catch (error) {
+            res.status(HttpStatus.NOT_FOUND).json({ error });
+        }
     }
 
     //#endregion
@@ -108,6 +113,8 @@ export class NotesController {
         @Req() req: { user: { id: string } },
         @Param('id') id: string,
     ) {
+        console.log('test3');
+
         await this.notesService.startShareNote(req.user.id, id);
     }
 
@@ -219,6 +226,7 @@ export class NotesController {
 
     @UseGuards(JwtAuthGuard)
     @Delete([':id', 'delete/:id'])
+    @Put('delete/:id')
     async deleteNote(
         @Req() req: { user: { id: string } },
         @Param('id') id: string,

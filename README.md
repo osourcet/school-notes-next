@@ -53,6 +53,7 @@ docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:lat
 | Event                   | Description                                        | Payload      |
 | ----------------------- | -------------------------------------------------- | ------------ |
 | `notes:changed`         | will be emited if the notes of a user was uploaded |              |
+|                         |                                                    |              |
 | `note:changed`          | will be emited if a note was created or edited     | `id: string` |
 | `note:deleted`          | will be emited if a note was deleted               | `id: string` |
 |                         |                                                    |              |
