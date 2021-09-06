@@ -15,6 +15,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: install docker
         uses: docker-practice/actions-setup-docker@master
+      - name: install NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.16.0
       - run: |
           sh production.sh
       - name: Updaload docker_image
