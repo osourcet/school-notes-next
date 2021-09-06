@@ -17,7 +17,6 @@ jobs:
         uses: docker-practice/actions-setup-docker@master
       - run: |
           sh production.sh
-          -
       - name: Updaload docker_image
         uses: svenstaro/upload-release-action@v2
         with:
