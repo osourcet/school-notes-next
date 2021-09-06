@@ -27,6 +27,6 @@ echo '\nProduction bundle ready\n'
 
 echo '\nBuild Dockerimage\n'
 
-docker build -t ${PROJECTNAME}:latest .
+docker build -t ${PROJECTNAME}:latest -f production.dockerfile .
 
 docker save --output ${PROJECTNAME}_dockerimage.tar ${PROJECTNAME}
