@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { ApolloClient, ApolloQueryResult } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { config } from 'dotenv';
@@ -10,7 +10,7 @@ config();
 
 @Injectable()
 export class GqlClientService {
-    private client: ApolloClient<any> | null;
+    private client: ApolloClient<NormalizedCacheObject> | null;
 
     constructor() {
         if (
@@ -18,10 +18,11 @@ export class GqlClientService {
             process.env.GQL_API_KEY === undefined
         ) {
             this.client = null;
+
             return;
         }
 
-        this.client = new ApolloClient({
+        this.client = new ApolloClient<NormalizedCacheObject>({
             link: createHttpLink({
                 uri: process.env.GQL_API_URL,
                 // eslint-disable-next-line

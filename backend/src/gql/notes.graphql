@@ -1,5 +1,40 @@
 query GetNotes($id: uuid!) {
-    schoolnotes_notes(where: { user: { id: { _eq: $id } } }) {
+    schoolnotes_notes(where: { owner: { _eq: $id } }) {
+        id
+        title
+        important
+        subject
+        date
+        content
+        done
+        last_modified
+        public
+    }
+    schoolnotes_read_only_notes(
+        where: {
+            _and: [
+                { user_id: { _eq: $id } }
+                { note: { public: { _eq: true } } }
+            ]
+        }
+    ) {
+        note {
+            id
+            title
+            important
+            subject
+            date
+            content
+            done
+            last_modified
+        }
+    }
+}
+
+query GetNote($id: uuid!, $user_id: uuid!) {
+    schoolnotes_notes(
+        where: { _and: [{ owner: { _eq: $user_id } }, { id: { _eq: $id } }] }
+    ) {
         id
         title
         important
@@ -64,6 +99,12 @@ query GetReadOnlyNotes($id: uuid!) {
             done
             last_modified
         }
+    }
+}
+
+query GetReadOnlyNoteUser($id: uuid!) {
+    schoolnotes_read_only_notes(where: { id: { _eq: $id } }) {
+        user_id
     }
 }
 
@@ -179,6 +220,19 @@ mutation RemoveSharedNote($id: uuid!, $userId: uuid!) {
         where: {
             _and: [{ user_id: { _eq: $userId } }, { note_id: { _eq: $id } }]
         }
+    ) {
+        affected_rows
+    }
+}
+
+mutation UpdateNote(
+    $id: uuid!
+    $userId: uuid!
+    $set: schoolnotes_notes_set_input!
+) {
+    update_schoolnotes_notes(
+        where: { _and: [{ owner: { _eq: $userId } }, { id: { _eq: $id } }] }
+        _set: $set
     ) {
         affected_rows
     }

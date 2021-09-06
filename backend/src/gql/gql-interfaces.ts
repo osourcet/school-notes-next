@@ -13,6 +13,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   jsonb: any;
+  timestamp: any;
   timestamptz: any;
   uuid: any;
 };
@@ -424,7 +425,7 @@ export type Schoolnotes_Notes = {
   done: Scalars['Boolean'];
   id: Scalars['uuid'];
   important: Scalars['Boolean'];
-  last_modified: Scalars['timestamptz'];
+  last_modified: Scalars['timestamp'];
   owner: Scalars['uuid'];
   public: Scalars['Boolean'];
   /** An array relationship */
@@ -469,7 +470,7 @@ export type Schoolnotes_Notes_Bool_Exp = {
   done?: Maybe<Boolean_Comparison_Exp>;
   id?: Maybe<Uuid_Comparison_Exp>;
   important?: Maybe<Boolean_Comparison_Exp>;
-  last_modified?: Maybe<Timestamptz_Comparison_Exp>;
+  last_modified?: Maybe<Timestamp_Comparison_Exp>;
   owner?: Maybe<Uuid_Comparison_Exp>;
   public?: Maybe<Boolean_Comparison_Exp>;
   read_only_notes?: Maybe<Schoolnotes_Read_Only_Notes_Bool_Exp>;
@@ -493,7 +494,7 @@ export type Schoolnotes_Notes_Insert_Input = {
   done?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['uuid']>;
   important?: Maybe<Scalars['Boolean']>;
-  last_modified?: Maybe<Scalars['timestamptz']>;
+  last_modified?: Maybe<Scalars['timestamp']>;
   owner?: Maybe<Scalars['uuid']>;
   public?: Maybe<Scalars['Boolean']>;
   read_only_notes?: Maybe<Schoolnotes_Read_Only_Notes_Arr_Rel_Insert_Input>;
@@ -599,7 +600,7 @@ export type Schoolnotes_Notes_Set_Input = {
   done?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['uuid']>;
   important?: Maybe<Scalars['Boolean']>;
-  last_modified?: Maybe<Scalars['timestamptz']>;
+  last_modified?: Maybe<Scalars['timestamp']>;
   owner?: Maybe<Scalars['uuid']>;
   public?: Maybe<Scalars['Boolean']>;
   subject?: Maybe<Scalars['String']>;
@@ -764,7 +765,7 @@ export type Schoolnotes_Users = {
   password: Scalars['String'];
   /** An array relationship */
   read_only_notes: Array<Schoolnotes_Read_Only_Notes>;
-  registered_at: Scalars['timestamptz'];
+  registered_at: Scalars['timestamp'];
   username: Scalars['String'];
 };
 
@@ -798,7 +799,7 @@ export type Schoolnotes_Users_Bool_Exp = {
   notes?: Maybe<Schoolnotes_Notes_Bool_Exp>;
   password?: Maybe<String_Comparison_Exp>;
   read_only_notes?: Maybe<Schoolnotes_Read_Only_Notes_Bool_Exp>;
-  registered_at?: Maybe<Timestamptz_Comparison_Exp>;
+  registered_at?: Maybe<Timestamp_Comparison_Exp>;
   username?: Maybe<String_Comparison_Exp>;
 };
 
@@ -821,7 +822,7 @@ export type Schoolnotes_Users_Insert_Input = {
   notes?: Maybe<Schoolnotes_Notes_Arr_Rel_Insert_Input>;
   password?: Maybe<Scalars['String']>;
   read_only_notes?: Maybe<Schoolnotes_Read_Only_Notes_Arr_Rel_Insert_Input>;
-  registered_at?: Maybe<Scalars['timestamptz']>;
+  registered_at?: Maybe<Scalars['timestamp']>;
   username?: Maybe<Scalars['String']>;
 };
 
@@ -883,7 +884,7 @@ export type Schoolnotes_Users_Set_Input = {
   email?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   password?: Maybe<Scalars['String']>;
-  registered_at?: Maybe<Scalars['timestamptz']>;
+  registered_at?: Maybe<Scalars['timestamp']>;
   username?: Maybe<Scalars['String']>;
 };
 
@@ -1149,6 +1150,19 @@ export type Subscription_RootServer_Functions_Apps_By_PkArgs = {
   id: Scalars['Int'];
 };
 
+/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
+export type Timestamp_Comparison_Exp = {
+  _eq?: Maybe<Scalars['timestamp']>;
+  _gt?: Maybe<Scalars['timestamp']>;
+  _gte?: Maybe<Scalars['timestamp']>;
+  _in?: Maybe<Array<Scalars['timestamp']>>;
+  _is_null?: Maybe<Scalars['Boolean']>;
+  _lt?: Maybe<Scalars['timestamp']>;
+  _lte?: Maybe<Scalars['timestamp']>;
+  _neq?: Maybe<Scalars['timestamp']>;
+  _nin?: Maybe<Array<Scalars['timestamp']>>;
+};
+
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
   _eq?: Maybe<Scalars['timestamptz']>;
@@ -1182,6 +1196,14 @@ export type GetNotesQueryVariables = Exact<{
 
 export type GetNotesQuery = { __typename?: 'query_root', schoolnotes_notes: Array<{ __typename?: 'schoolnotes_notes', id: any, title: string, important: boolean, subject: string, date: any, content: string, done: boolean, last_modified: any, public: boolean }>, schoolnotes_read_only_notes: Array<{ __typename?: 'schoolnotes_read_only_notes', note: { __typename?: 'schoolnotes_notes', id: any, title: string, important: boolean, subject: string, date: any, content: string, done: boolean, last_modified: any } }> };
 
+export type GetNoteQueryVariables = Exact<{
+  id: Scalars['uuid'];
+  user_id: Scalars['uuid'];
+}>;
+
+
+export type GetNoteQuery = { __typename?: 'query_root', schoolnotes_notes: Array<{ __typename?: 'schoolnotes_notes', id: any, title: string, important: boolean, subject: string, date: any, content: string, done: boolean, last_modified: any, public: boolean }>, schoolnotes_read_only_notes: Array<{ __typename?: 'schoolnotes_read_only_notes', note: { __typename?: 'schoolnotes_notes', id: any, title: string, important: boolean, subject: string, date: any, content: string, done: boolean, last_modified: any } }> };
+
 export type GetOwnNotesQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
@@ -1195,6 +1217,13 @@ export type GetReadOnlyNotesQueryVariables = Exact<{
 
 
 export type GetReadOnlyNotesQuery = { __typename?: 'query_root', schoolnotes_read_only_notes: Array<{ __typename?: 'schoolnotes_read_only_notes', note: { __typename?: 'schoolnotes_notes', id: any, title: string, important: boolean, subject: string, date: any, content: string, done: boolean, last_modified: any } }> };
+
+export type GetReadOnlyNoteUserQueryVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type GetReadOnlyNoteUserQuery = { __typename?: 'query_root', schoolnotes_read_only_notes: Array<{ __typename?: 'schoolnotes_read_only_notes', user_id: any }> };
 
 export type GetLastModifiedQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -1259,6 +1288,15 @@ export type RemoveSharedNoteMutationVariables = Exact<{
 
 
 export type RemoveSharedNoteMutation = { __typename?: 'mutation_root', delete_schoolnotes_read_only_notes?: Maybe<{ __typename?: 'schoolnotes_read_only_notes_mutation_response', affected_rows: number }> };
+
+export type UpdateNoteMutationVariables = Exact<{
+  id: Scalars['uuid'];
+  userId: Scalars['uuid'];
+  set: Schoolnotes_Notes_Set_Input;
+}>;
+
+
+export type UpdateNoteMutation = { __typename?: 'mutation_root', update_schoolnotes_notes?: Maybe<{ __typename?: 'schoolnotes_notes_mutation_response', affected_rows: number }> };
 
 export type DeleteNoteMutationVariables = Exact<{
   id: Scalars['uuid'];
@@ -1432,6 +1470,8 @@ export type ResolversTypes = {
   server_functions_apps_set_input: Server_Functions_Apps_Set_Input;
   server_functions_apps_update_column: Server_Functions_Apps_Update_Column;
   subscription_root: ResolverTypeWrapper<{}>;
+  timestamp: ResolverTypeWrapper<Scalars['timestamp']>;
+  timestamp_comparison_exp: Timestamp_Comparison_Exp;
   timestamptz: ResolverTypeWrapper<Scalars['timestamptz']>;
   timestamptz_comparison_exp: Timestamptz_Comparison_Exp;
   uuid: ResolverTypeWrapper<Scalars['uuid']>;
@@ -1499,6 +1539,8 @@ export type ResolversParentTypes = {
   server_functions_apps_prepend_input: Server_Functions_Apps_Prepend_Input;
   server_functions_apps_set_input: Server_Functions_Apps_Set_Input;
   subscription_root: {};
+  timestamp: Scalars['timestamp'];
+  timestamp_comparison_exp: Timestamp_Comparison_Exp;
   timestamptz: Scalars['timestamptz'];
   timestamptz_comparison_exp: Timestamptz_Comparison_Exp;
   uuid: Scalars['uuid'];
@@ -1558,7 +1600,7 @@ export type Schoolnotes_NotesResolvers<ContextType = any, ParentType extends Res
   done?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['uuid'], ParentType, ContextType>;
   important?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  last_modified?: Resolver<ResolversTypes['timestamptz'], ParentType, ContextType>;
+  last_modified?: Resolver<ResolversTypes['timestamp'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['uuid'], ParentType, ContextType>;
   public?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   read_only_notes?: Resolver<Array<ResolversTypes['schoolnotes_read_only_notes']>, ParentType, ContextType, RequireFields<Schoolnotes_NotesRead_Only_NotesArgs, never>>;
@@ -1595,7 +1637,7 @@ export type Schoolnotes_UsersResolvers<ContextType = any, ParentType extends Res
   notes?: Resolver<Array<ResolversTypes['schoolnotes_notes']>, ParentType, ContextType, RequireFields<Schoolnotes_UsersNotesArgs, never>>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   read_only_notes?: Resolver<Array<ResolversTypes['schoolnotes_read_only_notes']>, ParentType, ContextType, RequireFields<Schoolnotes_UsersRead_Only_NotesArgs, never>>;
-  registered_at?: Resolver<ResolversTypes['timestamptz'], ParentType, ContextType>;
+  registered_at?: Resolver<ResolversTypes['timestamp'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1635,6 +1677,10 @@ export type Subscription_RootResolvers<ContextType = any, ParentType extends Res
   server_functions_apps_by_pk?: SubscriptionResolver<Maybe<ResolversTypes['server_functions_apps']>, "server_functions_apps_by_pk", ParentType, ContextType, RequireFields<Subscription_RootServer_Functions_Apps_By_PkArgs, 'id'>>;
 };
 
+export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['timestamp'], any> {
+  name: 'timestamp';
+}
+
 export interface TimestamptzScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['timestamptz'], any> {
   name: 'timestamptz';
 }
@@ -1656,6 +1702,7 @@ export type Resolvers<ContextType = any> = {
   server_functions_apps?: Server_Functions_AppsResolvers<ContextType>;
   server_functions_apps_mutation_response?: Server_Functions_Apps_Mutation_ResponseResolvers<ContextType>;
   subscription_root?: Subscription_RootResolvers<ContextType>;
+  timestamp?: GraphQLScalarType;
   timestamptz?: GraphQLScalarType;
   uuid?: GraphQLScalarType;
 };
@@ -1667,7 +1714,36 @@ export type DirectiveResolvers<ContextType = any> = {
 
 export const GetNotes = gql`
     query GetNotes($id: uuid!) {
-  schoolnotes_notes(where: {user: {id: {_eq: $id}}}) {
+  schoolnotes_notes(where: {owner: {_eq: $id}}) {
+    id
+    title
+    important
+    subject
+    date
+    content
+    done
+    last_modified
+    public
+  }
+  schoolnotes_read_only_notes(
+    where: {_and: [{user_id: {_eq: $id}}, {note: {public: {_eq: true}}}]}
+  ) {
+    note {
+      id
+      title
+      important
+      subject
+      date
+      content
+      done
+      last_modified
+    }
+  }
+}
+    `;
+export const GetNote = gql`
+    query GetNote($id: uuid!, $user_id: uuid!) {
+  schoolnotes_notes(where: {_and: [{owner: {_eq: $user_id}}, {id: {_eq: $id}}]}) {
     id
     title
     important
@@ -1724,6 +1800,13 @@ export const GetReadOnlyNotes = gql`
       done
       last_modified
     }
+  }
+}
+    `;
+export const GetReadOnlyNoteUser = gql`
+    query GetReadOnlyNoteUser($id: uuid!) {
+  schoolnotes_read_only_notes(where: {id: {_eq: $id}}) {
+    user_id
   }
 }
     `;
@@ -1820,6 +1903,16 @@ export const RemoveSharedNote = gql`
     mutation RemoveSharedNote($id: uuid!, $userId: uuid!) {
   delete_schoolnotes_read_only_notes(
     where: {_and: [{user_id: {_eq: $userId}}, {note_id: {_eq: $id}}]}
+  ) {
+    affected_rows
+  }
+}
+    `;
+export const UpdateNote = gql`
+    mutation UpdateNote($id: uuid!, $userId: uuid!, $set: schoolnotes_notes_set_input!) {
+  update_schoolnotes_notes(
+    where: {_and: [{owner: {_eq: $userId}}, {id: {_eq: $id}}]}
+    _set: $set
   ) {
     affected_rows
   }

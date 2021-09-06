@@ -16,11 +16,14 @@ export class UserController {
 
     @Post('register')
     async register(
+        @Body() body,
         @Body('username') username,
         @Body('email') email,
         @Body('password') password,
         @Res() res: Response,
     ) {
+        console.log(body);
+
         await this.userservice
             .register({
                 username,

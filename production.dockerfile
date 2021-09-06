@@ -10,6 +10,6 @@ WORKDIR /app
 COPY production/dist/ ./dist/
 COPY production/package.json .
 
-RUN npm install --unsafe-perm
+RUN npm install --save
 
 CMD ["npm", "run", "start:prod"]

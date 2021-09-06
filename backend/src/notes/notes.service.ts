@@ -1,51 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { GqlClientService } from 'src/gql-client/gql-client.service';
+import { Note } from './note';
+import { NoteIncoming } from './note';
 import {
     AddSharedNote,
+    CreateNoteMutation,
     GetNotes,
     GetNotesQuery,
     GetReadOnlyNotes,
     GetReadOnlyNotesQuery,
-} from '../gql/gql-interfaces';
-import { Note } from './note';
-import { NoteIncoming } from './note';
-import {
     DeleteNote,
     DeleteNoteMutationVariables,
     GetLastModified,
     GetLastModifiedQuery,
-} from '../gql/gql-interfaces';
-import {
     RemoveSharedNote,
     AddSharedNoteMutationVariables,
     RemoveSharedNoteMutationVariables,
-} from '../gql/gql-interfaces';
-import {
     StopShareNote,
     StopShareNoteMutationVariables,
-} from '../gql/gql-interfaces';
-import {
     StartShareNote,
     StartShareNoteMutationVariables,
-} from '../gql/gql-interfaces';
-import {
     GetPublicNotesQuery,
     GetPublicNote,
     GetPublicNoteQuery,
-} from '../gql/gql-interfaces';
-import {
     CreateNoteMutationVariables,
     GetPublicNotes,
-} from '../gql/gql-interfaces';
-import {
     GetOwnNotes,
     GetOwnNotesQuery,
     CreateNote,
+    GetNote,
+    GetNoteQuery,
+    GetNoteQueryVariables,
+    UpdateNote,
+    UpdateNoteMutationVariables,
+    UpdateNoteMutation,
 } from '../gql/gql-interfaces';
 
 @Injectable()
 export class NotesService {
-    constructor(private gql: GqlClientService) {}
+    constructor(public gql: GqlClientService) {}
+
+    //#region Get Notes
 
     async getNotes(user_id: string) {
         const {
@@ -73,6 +68,25 @@ export class NotesService {
         });
 
         return { own: notes, readonly: readonlyNotes };
+    }
+
+    async getNote(note_id: string, user_id: string): Promise<Note> {
+        const {
+            data: {
+                schoolnotes_notes: [note_db],
+            },
+        } = (await this.gql.query(GetNote, {
+            id: note_id,
+            user_id: user_id,
+        } as GetNoteQueryVariables)) as {
+            data: GetNoteQuery;
+        };
+
+        if (!note_db) throw `No note with id ${note_id} found.`;
+
+        const { __typename, id, ...note } = note_db;
+
+        return { id: id as string, ...note, readonly: false };
     }
 
     async getOwnNotes(user_id: string) {
@@ -139,39 +153,74 @@ export class NotesService {
             data: GetPublicNotesQuery;
         };
 
-        return notes as Note[];
+        const readonlyNotes: Note[] = [];
+
+        notes.forEach((n) => {
+            const { __typename, id, ...note } = n;
+            readonlyNotes.push({ id: id as string, ...note, readonly: true });
+        });
+
+        return readonlyNotes;
     }
 
     async getPublicNote(id: string) {
         const {
             data: {
-                schoolnotes_notes: [note],
+                schoolnotes_notes: [note_db],
             },
         } = (await this.gql.query(GetPublicNote)) as {
             data: GetPublicNoteQuery;
         };
 
-        if (!note) throw `No note with id ${id} found.`;
+        if (!note_db) throw `No note with id ${id} found.`;
 
-        return note as Note;
+        const { __typename, id: _, ...note } = note_db;
+
+        return { id: id as string, ...note, readonly: true };
     }
+
+    //#endregion
+
+    //#region create & edit Notes
 
     async createNote(user_id: string, note: NoteIncoming) {
-        this.gql.mutate(CreateNote, {
+        const {
+            data: {
+                insert_schoolnotes_notes_one: { id },
+            },
+        } = (await this.gql.mutate(CreateNote, {
             ...note,
             owner: user_id,
-        } as CreateNoteMutationVariables);
+        } as CreateNoteMutationVariables)) as { data: CreateNoteMutation };
+
+        return id;
     }
 
-    async editNote(note_id: string) {
-        return {};
+    async editNote(noteId: string, userId: string, noteProperties: any) {
+        const {
+            data: {
+                update_schoolnotes_notes: { affected_rows: updated },
+            },
+        } = (await this.gql.mutate(UpdateNote, {
+            id: noteId,
+            userId,
+            set: noteProperties,
+        } as UpdateNoteMutationVariables)) as { data: UpdateNoteMutation };
+
+        return updated;
     }
+
+    //#endregion
+
+    //#region share Notes
 
     async startShareNote(user_id: string, note_id: string) {
-        await this.gql.mutate(StartShareNote, {
+        const r = await this.gql.mutate(StartShareNote, {
             id: note_id,
             userId: user_id,
         } as StartShareNoteMutationVariables);
+
+        console.log(r);
     }
 
     async stopShareNote(user_id: string, note_id: string) {
@@ -195,10 +244,16 @@ export class NotesService {
         } as RemoveSharedNoteMutationVariables);
     }
 
+    //#endregion
+
+    //#region delete Notes
+
     async deleteNote(user_id: string, note_id: string) {
         await this.gql.mutate(DeleteNote, {
             id: note_id,
             userId: user_id,
         } as DeleteNoteMutationVariables);
     }
+
+    //#endregion
 }
