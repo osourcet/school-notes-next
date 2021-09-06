@@ -12,4 +12,7 @@ COPY production/package.json .
 
 RUN npm install --save
 
+RUN pwd
+RUN ls -la
+
 CMD ["npm", "run", "start:prod"]
