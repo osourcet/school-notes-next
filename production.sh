@@ -4,11 +4,13 @@
 PROJECTNAME=`basename "$PWD" | tr '[:upper:]' '[:lower:]'`
 DIR=$PWD
 
+
+
 echo '--- Build ${PROJECTNAME}-App for production ---'
 
 echo '\nBuild ${PROJECTNAME}-App for production\n'
-cd $DIR/backend; yarn build & PINEST=$!
-cd $DIR/frontend; yarn build:production & PIVUE=$!
+cd $DIR/backend; yarn; yarn build & PINEST=$!
+cd $DIR/frontend; yarn; yarn build:production & PIVUE=$!
 
 # Create production bundle
 echo '\nCreate production bundle\n'
