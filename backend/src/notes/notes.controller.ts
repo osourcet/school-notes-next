@@ -37,7 +37,13 @@ export class NotesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get(':id')
+    @Get('own')
+    async getOwnNotes(@Req() req: { user: { id: string } }) {
+        return await this.notesService.getOwnNotes(req.user.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('own/:id')
     async getNote(
         @Param('id') id: string,
         @Req() req: { user: { id: string } },
@@ -46,12 +52,6 @@ export class NotesController {
         return await this.notesService
             .getNote(id, req.user.id)
             .catch((error) => res.status(HttpStatus.NOT_FOUND).json({ error }));
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('own')
-    async getOwnNotes(@Req() req: { user: { id: string } }) {
-        return await this.notesService.getOwnNotes(req.user.id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -66,16 +66,13 @@ export class NotesController {
         return await this.notesService.getLastModified(req.user.id);
     }
 
-    // @Get('public')
-    // async getPublicNotes() {
-    //     console.log('test');
-
-    //     console.log(await this.notesService.getPublicNotes());
-    // }
+    @Get('public')
+    async getPublicNotes() {
+        return await this.notesService.getPublicNotes();
+    }
 
     @Get('public/:id')
     async getPublicNote(@Param('id') id: string, @Res() res: Response) {
-        console.log('test2', id);
         try {
             res.json(await this.notesService.getPublicNote(id));
         } catch (error) {
@@ -113,8 +110,6 @@ export class NotesController {
         @Req() req: { user: { id: string } },
         @Param('id') id: string,
     ) {
-        console.log('test3');
-
         await this.notesService.startShareNote(req.user.id, id);
     }
 
