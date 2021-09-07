@@ -192,7 +192,12 @@ export class NotesService {
                 insert_schoolnotes_notes_one: { id },
             },
         } = (await this.gql.mutate(CreateNote, {
-            ...note,
+            title: note.title,
+            important: note.important,
+            subject: note.subject,
+            date: note.date,
+            content: note.content,
+            done: note.done,
             owner: user_id,
         } as CreateNoteMutationVariables)) as { data: CreateNoteMutation };
 
