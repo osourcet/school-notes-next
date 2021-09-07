@@ -99,8 +99,27 @@ export class NotesController {
         res.sendStatus(HttpStatus.OK);
 
         try {
-            this.notesService.updateAllNotes(req.user.id, notes);
+            const ids = await this.notesService.updateAllNotes(
+                req.user.id,
+                notes,
+            );
             this.notesGateway.server.to(req.user.id).emit('notes:changed');
+
+            ids.forEach(async (id) => {
+                const {
+                    data: { schoolnotes_read_only_notes: user },
+                } = (await this.notesService.gql.query(GetReadOnlyNoteUser, {
+                    id,
+                } as GetReadOnlyNoteUserQueryVariables)) as {
+                    data: GetReadOnlyNoteUserQuery;
+                };
+
+                user.forEach(({ user_id }) =>
+                    this.notesGateway.server
+                        .to(user_id)
+                        .emit('note-readonly:changed', id),
+                );
+            });
         } catch (error) {
             console.log(error);
         }
@@ -176,10 +195,11 @@ export class NotesController {
 
         const {
             data: { schoolnotes_read_only_notes: user },
-        } = (await this.notesService.gql.query(
-            GetReadOnlyNoteUser,
-            {} as GetReadOnlyNoteUserQueryVariables,
-        )) as { data: GetReadOnlyNoteUserQuery };
+        } = (await this.notesService.gql.query(GetReadOnlyNoteUser, {
+            id,
+        } as GetReadOnlyNoteUserQueryVariables)) as {
+            data: GetReadOnlyNoteUserQuery;
+        };
 
         user.forEach(({ user_id }) =>
             this.notesGateway.server

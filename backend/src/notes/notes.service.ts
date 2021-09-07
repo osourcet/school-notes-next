@@ -302,7 +302,7 @@ export class NotesService {
             ),
         ]);
 
-        console.log(ids);
+        return ids;
     }
 
     //#endregion
