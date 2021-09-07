@@ -37,7 +37,7 @@ export class UserController {
     }
 
     @Post('login')
-    @Redirect('/api/auth/login', 301)
+    @Redirect('/api/auth/login', 308)
     async login() {
         return;
     }
