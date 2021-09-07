@@ -200,6 +200,8 @@ export class NotesService {
     }
 
     async editNote(noteId: string, userId: string, noteProperties: any) {
+        console.log(noteId, userId, noteProperties);
+
         const {
             data: {
                 update_schoolnotes_notes: { affected_rows: updated },
@@ -207,10 +209,100 @@ export class NotesService {
         } = (await this.gql.mutate(UpdateNote, {
             id: noteId,
             userId,
-            set: noteProperties,
+            set: { ...noteProperties, last_modified: new Date().toISOString() },
         } as UpdateNoteMutationVariables)) as { data: UpdateNoteMutation };
 
-        return updated;
+        return updated == 0 ? null : noteId;
+    }
+
+    async updateAllNotes(
+        userId: string,
+        notesClient: Array<
+            (NoteIncoming & { last_modified: string; id: any }) | Note
+        >,
+    ) {
+        const notesServer = await this.getOwnNotes(userId);
+
+        const notesMustCreate: Array<
+            (NoteIncoming & { last_modified: string; id: any }) | Note
+        > = [];
+
+        const notesMustEdit: Array<
+            (NoteIncoming & { last_modified: string; id: any }) | Note
+        > = [];
+
+        const getNoteById: (
+            array: (
+                | Note
+                | (NoteIncoming & {
+                      last_modified: string;
+                      id: any;
+                  })
+            )[],
+            id: string,
+        ) =>
+            | Note
+            | (NoteIncoming & {
+                  last_modified: string;
+                  id: any;
+              }) = (array, id) => array.filter((note) => note.id === id)[0];
+
+        const checkNote = (
+            noteClient:
+                | (NoteIncoming & { last_modified: string; id: any })
+                | Note,
+            noteServer:
+                | (NoteIncoming & { last_modified: string; id: any })
+                | Note,
+        ) => {
+            if (
+                new Date(noteClient.last_modified) >
+                new Date(noteServer.last_modified)
+            )
+                return true;
+            return false;
+        };
+
+        const checkNotes = async () => {
+            for await (const note of notesClient) {
+                const noteServer = getNoteById(notesServer, note.id);
+
+                if (noteServer === undefined) {
+                    notesMustCreate.push(note);
+                    continue;
+                }
+                if (checkNote(note, noteServer)) notesMustEdit.push(note);
+            }
+        };
+
+        await checkNotes();
+        const ids: string[] = await Promise.all([
+            ...notesMustCreate.map<Promise<any>>(
+                ({ title, important, subject, date, content, done }) =>
+                    this.createNote(userId, {
+                        title,
+                        important,
+                        subject,
+                        date,
+                        content,
+                        done,
+                    }),
+            ),
+
+            ...notesMustEdit.map<Promise<any>>(
+                ({ id, title, important, subject, date, content, done }) =>
+                    this.editNote(id, userId, {
+                        title,
+                        important,
+                        subject,
+                        date,
+                        content,
+                        done,
+                    }),
+            ),
+        ]);
+
+        console.log(ids);
     }
 
     //#endregion

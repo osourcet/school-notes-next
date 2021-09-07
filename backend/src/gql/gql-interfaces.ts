@@ -1805,7 +1805,7 @@ export const GetReadOnlyNotes = gql`
     `;
 export const GetReadOnlyNoteUser = gql`
     query GetReadOnlyNoteUser($id: uuid!) {
-  schoolnotes_read_only_notes(where: {id: {_eq: $id}}) {
+  schoolnotes_read_only_notes(where: {note_id: {_eq: $id}}) {
     user_id
   }
 }

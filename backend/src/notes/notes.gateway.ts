@@ -20,8 +20,6 @@ export class NotesGateway implements OnGatewayConnection {
                 client.disconnect();
             });
 
-        console.log('user', user);
-
         if (!user) client.disconnect();
 
         console.log(user);

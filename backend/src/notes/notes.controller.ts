@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { NotesService } from './notes.service';
-import { NoteIncoming } from './note';
+import { Note, NoteIncoming } from './note';
 import { Response } from 'express';
 import { NotesGateway } from './notes.gateway';
 import { GetReadOnlyNoteUser } from 'src/gql/gql-interfaces';
@@ -63,7 +63,9 @@ export class NotesController {
     @UseGuards(JwtAuthGuard)
     @Get('lastmodified')
     async lastModified(@Req() req: { user: { id: string } }) {
-        return await this.notesService.getLastModified(req.user.id);
+        return {
+            lastmodified: await this.notesService.getLastModified(req.user.id),
+        };
     }
 
     @Get('public')
@@ -85,7 +87,27 @@ export class NotesController {
     //#region PUT
 
     @UseGuards(JwtAuthGuard)
-    @Put(['', 'create'])
+    @Put()
+    async updateAllNotes(
+        @Req() req: { user: { id: string } },
+        @Body()
+        notes: ((NoteIncoming & { last_modified: string; id: any }) | Note)[],
+        @Res() res: Response,
+    ) {
+        console.log(notes);
+
+        res.sendStatus(HttpStatus.OK);
+
+        try {
+            this.notesService.updateAllNotes(req.user.id, notes);
+            this.notesGateway.server.to(req.user.id).emit('notes:changed');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Put('create')
     async createNotes(
         @Req() req: { user: { id: string } },
         @Body() note: NoteIncoming,
@@ -93,15 +115,13 @@ export class NotesController {
     ) {
         console.log(note);
 
-        const id = (await this.notesService
-            .createNote(req.user.id, note)
-            .catch((error) =>
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error }),
-            )) as string;
-
-        this.notesGateway.server.to(req.user.id).emit('note:changed', id);
-
-        res.send();
+        try {
+            const id = await this.notesService.createNote(req.user.id, note);
+            this.notesGateway.server.to(req.user.id).emit('note:changed', id);
+            res.sendStatus(HttpStatus.OK);
+        } catch (error) {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+        }
     }
 
     @UseGuards(JwtAuthGuard)
@@ -150,7 +170,7 @@ export class NotesController {
     ) {
         const updated = await this.notesService.editNote(id, req.user.id, note);
 
-        if (updated == 0) return res.sendStatus(HttpStatus.NOT_FOUND);
+        if (updated == null) return res.sendStatus(HttpStatus.NOT_FOUND);
 
         this.notesGateway.server.to(req.user.id).emit('note:changed', id);
 
@@ -189,22 +209,25 @@ export class NotesController {
                 'done',
             ].includes(property)
         )
-            res.sendStatus(HttpStatus.BAD_REQUEST);
+            return res.sendStatus(HttpStatus.BAD_REQUEST);
 
         const updated = await this.notesService.editNote(id, req.user.id, {
-            property: value,
+            [property]: value,
         });
 
-        if (updated == 0) return res.sendStatus(HttpStatus.NOT_FOUND);
+        if (updated == null) return res.sendStatus(HttpStatus.NOT_FOUND);
 
         this.notesGateway.server.to(req.user.id).emit('note:changed', id);
 
         const {
             data: { schoolnotes_read_only_notes: user },
-        } = (await this.notesService.gql.query(
-            GetReadOnlyNoteUser,
-            {} as GetReadOnlyNoteUserQueryVariables,
-        )) as { data: GetReadOnlyNoteUserQuery };
+        } = (await this.notesService.gql.query(GetReadOnlyNoteUser, {
+            id,
+        } as GetReadOnlyNoteUserQueryVariables)) as {
+            data: GetReadOnlyNoteUserQuery;
+        };
+
+        console.log(user);
 
         user.forEach(({ user_id }) =>
             this.notesGateway.server
