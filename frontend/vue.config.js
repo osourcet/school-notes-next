@@ -14,6 +14,15 @@ module.exports = {
             path.resolve(__dirname, 'src/components/'),
         );
 
+        config.module.rule('svg').uses.clear();
+
+        // config.module.rule('svg').use('url-loader').loader('url-loader');
+
+        config.module
+            .rule('svg')
+            .use('vue-svg-loader')
+            .loader('vue-svg-loader').end();
+
         // config.optimization.minimize(false);
     },
     configureWebpack: {

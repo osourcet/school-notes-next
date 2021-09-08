@@ -163,6 +163,7 @@ query GetPublicNote($id: uuid!) {
 }
 
 mutation CreateNote(
+    $id: uuid!
     $title: String!
     $important: Boolean!
     $subject: String!
@@ -170,9 +171,11 @@ mutation CreateNote(
     $content: String!
     $done: Boolean!
     $owner: uuid!
+    $last_modified: timestamp!
 ) {
     insert_schoolnotes_notes_one(
         object: {
+            
             title: $title
             important: $important
             subject: $subject

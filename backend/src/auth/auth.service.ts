@@ -15,18 +15,22 @@ export class AuthService {
         username: string,
         password: string,
     ): Promise<{ username: string; id: string }> {
-        const {
-            data: {
-                schoolnotes_users: [{ id, password: password_db }],
-            },
-        } = (await this.gql.mutate(Login, {
-            username,
-        })) as { data: LoginQuery };
+        try {
+            const {
+                data: {
+                    schoolnotes_users: [{ id, password: password_db }],
+                },
+            } = (await this.gql.mutate(Login, {
+                username,
+            })) as { data: LoginQuery };
 
-        if (!(await compare(password, password_db)))
-            throw 'Password is incorrect';
+            if (!(await compare(password, password_db)))
+                throw 'Password is incorrect';
 
-        return { username, id };
+            return { username, id };
+        } catch (error) {
+            return null;
+        }
     }
 
     async verify(token: string) {

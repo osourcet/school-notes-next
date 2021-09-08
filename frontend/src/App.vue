@@ -1,36 +1,28 @@
 <template>
     <v-app>
         <v-app-bar app color="primary" dark>
-            <div class="d-flex align-center">
-                <v-img
-                    alt="Vuetify Logo"
-                    class="shrink mr-2"
-                    contain
-                    src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-                    transition="scale-transition"
-                    width="40"
-                />
+            <v-btn elevation="4" class="white mx-4" icon x-large @click="$router.push({ path: '/' }).catch(() => {})">
+                <v-icon size="26"> $vuetify.icons.schoolnotes </v-icon>
+            </v-btn>
 
-                <v-img
-                    alt="Vuetify Name"
-                    class="shrink mt-1 hidden-sm-and-down"
-                    contain
-                    min-width="100"
-                    src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-                    width="100"
-                />
-            </div>
+            <v-btn class="ml-4" icon v-if="autherized" @click="$router.push({ path: '/notes' }).catch(() => {})">
+                <v-icon> mdi-notebook-outline </v-icon>
+            </v-btn>
 
+            <v-btn class="ml-2" icon v-if="autherized" @click="$router.push({ path: '/settings' }).catch(() => {})">
+                <v-icon> mdi-cog-outline </v-icon>
+            </v-btn>
+
+            <v-btn class="ml-2" icon @click="$router.push({ path: '/info' }).catch(() => {})">
+                <v-icon> mdi-information-outline </v-icon>
+            </v-btn>
             <v-spacer></v-spacer>
 
-            <v-btn
-                href="https://github.com/vuetifyjs/vuetify/releases/latest"
-                target="_blank"
-                text
-            >
-                <span class="mr-2">Latest Release</span>
-                <v-icon>mdi-open-in-new</v-icon>
+            <v-btn elevation="2" class="mr-4" v-if="!autherized" @click="$router.push({ path: '/register' }).catch(() => {})">
+                Registrieren
             </v-btn>
+            <v-btn elevation="2" v-if="!autherized" @click="$router.push({ path: '/login' }).catch(() => {})"> Anmelden </v-btn>
+            <v-btn elevation="2" v-if="autherized" @click="$store.dispatch('logout')"> Abmelden </v-btn>
         </v-app-bar>
 
         <v-main>
@@ -41,12 +33,22 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import store from './store';
 
 export default Vue.extend({
     name: 'App',
 
-    data: () => ({
-        //
-    }),
+    computed: {
+        autherized: () => store.getters['user/autherized'],
+    },
 });
 </script>
+
+<style lang="sass">
+.center
+  height: 100%
+  width: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+</style>
