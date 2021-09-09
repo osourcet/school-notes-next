@@ -291,8 +291,19 @@ export class NotesService {
         await checkNotes();
         const ids: string[] = await Promise.all([
             ...notesMustCreate.map<Promise<any>>(
-                ({ title, important, subject, date, content, done }) =>
+                ({
+                    id,
+                    last_modified,
+                    title,
+                    important,
+                    subject,
+                    date,
+                    content,
+                    done,
+                }) =>
                     this.createNote(userId, {
+                        id,
+                        last_modified,
                         title,
                         important,
                         subject,

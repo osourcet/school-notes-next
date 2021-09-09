@@ -162,7 +162,7 @@ export class NotesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('add/:id')
+    @Put('subscribe/:id')
     async addSharedNote(
         @Req() req: { user: { id: string } },
         @Param('id') id: string,
@@ -171,7 +171,7 @@ export class NotesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('remove/:id')
+    @Put('unsubscribe/:id')
     async removeSharedNote(
         @Req() req: { user: { id: string } },
         @Param('id') id: string,
@@ -263,7 +263,7 @@ export class NotesController {
     //#region DELETE
 
     @UseGuards(JwtAuthGuard)
-    @Delete([':id', 'delete/:id'])
+    @Delete('delete/:id')
     @Put('delete/:id')
     async deleteNote(
         @Req() req: { user: { id: string } },

@@ -1245,6 +1245,7 @@ export type GetPublicNoteQueryVariables = Exact<{
 export type GetPublicNoteQuery = { __typename?: 'query_root', schoolnotes_notes: Array<{ __typename?: 'schoolnotes_notes', id: any, title: string, important: boolean, subject: string, date: any, content: string, done: boolean, last_modified: any, public: boolean }> };
 
 export type CreateNoteMutationVariables = Exact<{
+  id: Scalars['uuid'];
   title: Scalars['String'];
   important: Scalars['Boolean'];
   subject: Scalars['String'];
@@ -1252,6 +1253,7 @@ export type CreateNoteMutationVariables = Exact<{
   content: Scalars['String'];
   done: Scalars['Boolean'];
   owner: Scalars['uuid'];
+  last_modified: Scalars['timestamp'];
 }>;
 
 
@@ -1861,7 +1863,7 @@ export const GetPublicNote = gql`
 }
     `;
 export const CreateNote = gql`
-    mutation CreateNote($title: String!, $important: Boolean!, $subject: String!, $date: timestamptz!, $content: String!, $done: Boolean!, $owner: uuid!) {
+    mutation CreateNote($id: uuid!, $title: String!, $important: Boolean!, $subject: String!, $date: timestamptz!, $content: String!, $done: Boolean!, $owner: uuid!, $last_modified: timestamp!) {
   insert_schoolnotes_notes_one(
     object: {title: $title, important: $important, subject: $subject, date: $date, content: $content, done: $done, owner: $owner}
   ) {
