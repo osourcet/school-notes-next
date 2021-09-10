@@ -77,7 +77,7 @@
                                 name="input-7-4"
                                 label="Inhalt"
                                 prepend-inner-icon="mdi-page-layout-body"
-                                :hint="`<a target='_blank' href='https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax'>Markdown</a> wird unterstützt.`"
+                                :hint="`<a target='_blank' href='https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax'> Markdown </a> wird unterstützt.`"
                                 persistent-hint
                             >
                                 <template v-slot:message="{ message }">
@@ -143,12 +143,14 @@ export default Vue.extend({
 
             if (!this.valid) return;
 
+            console.log(!!this.important);
+
             try {
                 await (store.getters.axios as AxiosInstance).put(
                     '/notes/create',
                     {
                         title: this.title,
-                        important: this.important,
+                        important: !!this.important,
                         subject: this.subject,
                         date: new Date(this.date).toISOString(),
                         content: this.content,
@@ -161,7 +163,7 @@ export default Vue.extend({
                     },
                 );
             } catch (error) {
-                console.log(error);
+                console.log(error.response.data);
             }
         },
     },

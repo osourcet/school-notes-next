@@ -6,7 +6,7 @@
                     icon
                     v-on="on"
                     v-bind="attrs"
-                    @click="$emit('createNote')"
+                    @click="$emit('create-note')"
                 >
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>

@@ -9,7 +9,14 @@
 
             <v-row>
                 <v-col cols="12" class="d-flex justify-center">
-                    <notes-toolbar v-model="search"></notes-toolbar>
+                    <notes-toolbar
+                        v-model="search"
+                        @create-note="
+                            $router
+                                .push({ path: '/notes/create' })
+                                .catch(() => {})
+                        "
+                    ></notes-toolbar>
                 </v-col>
             </v-row>
 
@@ -52,7 +59,12 @@
         >
             <v-list dense>
                 <v-subheader>Erstelloptionen</v-subheader>
-                <v-list-item link @click="$emit('create-file')">
+                <v-list-item
+                    link
+                    @click="
+                        $router.push({ path: '/notes/create' }).catch(() => {})
+                    "
+                >
                     <v-list-item-icon class="mr-3">
                         <v-icon> mdi-plus </v-icon>
                     </v-list-item-icon>

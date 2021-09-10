@@ -175,7 +175,7 @@ mutation CreateNote(
 ) {
     insert_schoolnotes_notes_one(
         object: {
-            
+            id: $id
             title: $title
             important: $important
             subject: $subject
@@ -183,6 +183,7 @@ mutation CreateNote(
             content: $content
             done: $done
             owner: $owner
+            last_modified: $last_modified
         }
     ) {
         id

@@ -1865,7 +1865,7 @@ export const GetPublicNote = gql`
 export const CreateNote = gql`
     mutation CreateNote($id: uuid!, $title: String!, $important: Boolean!, $subject: String!, $date: timestamptz!, $content: String!, $done: Boolean!, $owner: uuid!, $last_modified: timestamp!) {
   insert_schoolnotes_notes_one(
-    object: {title: $title, important: $important, subject: $subject, date: $date, content: $content, done: $done, owner: $owner}
+    object: {id: $id, title: $title, important: $important, subject: $subject, date: $date, content: $content, done: $done, owner: $owner, last_modified: $last_modified}
   ) {
     id
   }
