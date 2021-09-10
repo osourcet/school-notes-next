@@ -16,6 +16,7 @@
                                 .push({ path: '/notes/create' })
                                 .catch(() => {})
                         "
+                        @save="sort = $event"
                     ></notes-toolbar>
                 </v-col>
             </v-row>
@@ -40,12 +41,18 @@
                         :date="note.date"
                         :content="note.content"
                         :done="note.done"
-                        :readonly="true"
-                        :public="true"
+                        :readonly="note.readonly"
+                        :public="note.public"
                         @contextmenu.stop="showContextMenu($event, note.id)"
-                        @copy="copy"
-                        @subscribe="subscribe"
                         @unsubscribe="unsubscribe"
+                        @edit="
+                            $router.push({
+                                path: '/notes/edit',
+                                query: { id: $event },
+                            })
+                        "
+                        @done="done"
+                        @not-done="notDone"
                     />
                 </v-col>
             </v-row>
@@ -190,7 +197,11 @@ export default Vue.extend({
             this.contextMenuItems.push({
                 icon: 'mdi-pencil',
                 text: 'Bearbeiten',
-                click: () => {}, // eslint-disable-line
+                click: () =>
+                    this.$router.push({
+                        path: '/notes/edit',
+                        query: { id: this.note },
+                    }), // eslint-disable-line
             });
 
             this.contextMenuItems.push({
@@ -250,6 +261,8 @@ export default Vue.extend({
         },
 
         makeNotesSorted() {
+            this.notesSorted = [];
+
             const filtered =
                 this.search == ''
                     ? this.notes
@@ -282,7 +295,7 @@ export default Vue.extend({
             else if (this.sort.showImportant)
                 notes.push(...this.sortNotes(splited.important));
 
-            if (this.sort.showNormal)
+            if (this.sort.showNormal && this.sort.separate)
                 notes.push(...this.sortNotes(splited.normal));
 
             if (this.sort.showDone) notes.push(...this.sortNotes(splited.done));
@@ -290,7 +303,71 @@ export default Vue.extend({
             this.notesSorted = notes;
         },
 
+        async unsubscribe(id: string) {
+            try {
+                await store.getters.axios.put(
+                    `/notes/unsubscribe/${id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
+                store.dispatch('showInfo', 'Sie folgen nun einer Notiz.');
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async done(id: string) {
+            try {
+                await store.getters.axios.put(
+                    `/notes/edit/${id}/done`,
+                    {
+                        value: true,
+                    },
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
+                store.dispatch(
+                    'showInfo',
+                    'Sie haben eine Notiz als erledigt markiert.',
+                );
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async notDone(id: string) {
+            try {
+                await store.getters.axios.put(
+                    `/notes/edit/${id}/done`,
+                    {
+                        value: false,
+                    },
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
+                store.dispatch(
+                    'showInfo',
+                    'Sie haben eine Notiz als unerledigt markiert.',
+                );
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         //#endregion
+    },
+
+    mounted() {
+        this.makeNotesSorted();
     },
 
     watch: {

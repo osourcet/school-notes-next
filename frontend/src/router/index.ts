@@ -11,6 +11,7 @@ import Shared from '@/views/Shared.vue';
 
 import Notes from '@/views/Notes.vue';
 import CreateNote from '@/views/CreateNote.vue';
+import EditNote from '@/views/EditNote.vue';
 import Settings from '@/views/Notes.vue';
 
 Vue.use(VueRouter);
@@ -25,6 +26,7 @@ const routes: Array<RouteConfig> = [
 
     { path: '/notes', component: Notes },
     { path: '/notes/create', component: CreateNote },
+    { path: '/notes/edit', component: EditNote },
     { path: '/settings', component: Settings },
 ];
 

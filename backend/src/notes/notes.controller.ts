@@ -49,9 +49,11 @@ export class NotesController {
         @Req() req: { user: { id: string } },
         @Res() res: Response,
     ) {
-        return await this.notesService
-            .getNote(id, req.user.id)
-            .catch((error) => res.status(HttpStatus.NOT_FOUND).json({ error }));
+        try {
+            res.json(await this.notesService.getNote(id, req.user.id));
+        } catch (error) {
+            res.status(HttpStatus.NOT_FOUND).json({ error });
+        }
     }
 
     @UseGuards(JwtAuthGuard)
