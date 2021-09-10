@@ -56,7 +56,7 @@
             <v-btn
                 elevation="2"
                 v-if="autherized"
-                @click="$store.dispatch('logout')"
+                @click="$store.dispatch('user/logout')"
             >
                 Abmelden
             </v-btn>
@@ -65,6 +65,16 @@
         <v-main>
             <router-view />
         </v-main>
+
+        <v-snackbar v-model="info" :multi-line="true">
+            <span> {{ infoText }} </span>
+
+            <template v-slot:action="{ attrs }">
+                <v-btn color="orange" text v-bind="attrs" @click="info = false">
+                    Schließen
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-app>
 </template>
 
@@ -77,6 +87,11 @@ export default Vue.extend({
 
     computed: {
         autherized: () => store.getters['user/autherized'],
+        info: {
+            get: () => store.state.info,
+            set: (val) => (store.state.info = val),
+        },
+        infoText: () => store.state.infoText,
     },
 });
 </script>

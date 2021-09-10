@@ -16,6 +16,16 @@ const userModule = {
     },
 
     mutations: {
+        init: (state) => {
+            const username = localStorage.getItem('school-notes-username');
+            const jwt = localStorage.getItem('school-notes-token');
+
+            if (!username || !jwt) return;
+
+            state.autherized = true;
+            state.username = username;
+            state.jwt = jwt;
+        },
         login: (state, { username, jwt }) => {
             state.autherized = true;
             state.username = username;
@@ -24,12 +34,21 @@ const userModule = {
         logout: (state) => (state.autherized = false),
     },
 
+    actions: {
+        async logout({ commit }) {
+            console.log('logout');
+            commit('logout');
+            localStorage.removeItem('school-notes-token');
+        },
+    },
+
     getters: {
         autherized: ({ autherized }) => autherized,
         userinfo: (state) => {
             if (!state.autherized || !state.username || !state.jwt) return null;
             return state.username;
         },
+        jwt: ({ jwt }) => `Bearer ${jwt}`,
     },
 } as Module<State, any>;
 

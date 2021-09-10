@@ -6,9 +6,11 @@ import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
 import Info from '@/views/Info.vue';
 
+import Public from '@/views/Public.vue';
 import Shared from '@/views/Shared.vue';
 
 import Notes from '@/views/Notes.vue';
+import CreateNote from '@/views/CreateNote.vue';
 import Settings from '@/views/Notes.vue';
 
 Vue.use(VueRouter);
@@ -17,10 +19,12 @@ const routes: Array<RouteConfig> = [
     { path: '/', component: Welcome },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
+    { path: '/public', component: Public },
     { path: '/shared', component: Shared },
     { path: '/info', component: Info },
 
     { path: '/notes', component: Notes },
+    { path: '/notes/create', component: CreateNote },
     { path: '/settings', component: Settings },
 ];
 

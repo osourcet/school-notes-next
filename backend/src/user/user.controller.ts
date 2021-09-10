@@ -42,6 +42,12 @@ export class UserController {
         return;
     }
 
+    @Post('verify')
+    @Redirect('/api/auth/verify', 308)
+    async verify() {
+        return;
+    }
+
     @Post('resetpassword')
     async resetPassword() {
         await this.userservice.resetPassword();

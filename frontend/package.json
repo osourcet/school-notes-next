@@ -11,12 +11,13 @@
         "build:production": "vue-cli-service build --mode production"
     },
     "dependencies": {
+        "@types/showdown": "^1.9.4",
         "axios": "^0.21.2",
         "bable-loader": "^0.0.1-security",
         "core-js": "^3.6.5",
         "vue": "^2.6.11",
         "vue-router": "^3.2.0",
-        "vue-showdown": "^3.1.0",
+        "vue-showdown": "2.4.1",
         "vue-svg-loader": "^0.16.0",
         "vuetify": "^2.4.0",
         "vuex": "^3.4.0"

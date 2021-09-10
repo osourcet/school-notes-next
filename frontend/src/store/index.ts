@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios, { AxiosInstance } from 'axios';
 import user from './user';
+import notes from './notes';
 
 Vue.use(Vuex);
 
@@ -12,45 +13,24 @@ const store = new Vuex.Store({
                 ? `${window.location.protocol}//${window.location.hostname}/api/`
                 : process.env.VUE_APP_API_URL,
         axios: null as null | AxiosInstance,
+
+        info: false,
+        infoText: '',
     },
     mutations: {},
     actions: {
-        init({ state, dispatch }) {
+        init({ state, commit, dispatch }) {
             state.axios = axios.create({
                 baseURL: state.apiUrl,
             });
 
-            // dispatch('login', {
-            //     username: 'user3',
-            //     email: 'user3@gmail.com',
-            //     password: 'test',
-            // });
+            commit('user/init');
+            dispatch('notes/init');
         },
 
-        async verify() {
-            console.log('verify');
-        },
-
-        async login(
-            { state, commit },
-            { username, password }: { username: string; password: string },
-        ) {
-            console.log('login');
-            const r = await state.axios?.post('user/login', {
-                username,
-                password,
-            });
-
-            if (r) {
-                commit('user/login', { username, jwt: r.data.token });
-                localStorage.setItem('school-notes-token', r.data.token);
-            }
-        },
-
-        async logout({ commit }) {
-            console.log('logout');
-            commit('user/logout');
-            localStorage.removeItem('school-notes-token');
+        showInfo({ state }, info: string) {
+            state.info = true;
+            state.infoText = info;
         },
     },
     getters: {
@@ -58,6 +38,7 @@ const store = new Vuex.Store({
     },
     modules: {
         user,
+        notes,
     },
 });
 

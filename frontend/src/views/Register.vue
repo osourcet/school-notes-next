@@ -9,6 +9,13 @@
                 <v-container class="my-6" fluid>
                     <v-row no-gutters>
                         <v-col cols="12">
+                            <v-alert type="warning">
+                                Dies ist eine unvollständige Alpha-Version, d.h.
+                                es kann sein, dass einige Komponetenten noch
+                                nicht funktionieren.
+                            </v-alert>
+                        </v-col>
+                        <v-col cols="12">
                             <v-text-field
                                 solo
                                 label="Benutzername"

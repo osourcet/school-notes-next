@@ -122,6 +122,7 @@ export default Vue.extend({
                 });
 
                 localStorage.setItem('school-notes-token', data.token);
+                localStorage.setItem('school-notes-username', this.username);
 
                 this.$router.push({ path: '/' }).catch(() => {}); // eslint-disable-line
             } catch (error) {
