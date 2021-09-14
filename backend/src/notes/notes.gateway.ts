@@ -15,7 +15,7 @@ export class NotesGateway implements OnGatewayConnection {
 
     async handleConnection(client: Socket) {
         const user = await this.authService
-            .verify(client.handshake.query.token as string)
+            .verify(client.handshake.headers.authorization as string)
             .catch(() => {
                 client.disconnect();
             });

@@ -222,7 +222,14 @@ export class NotesService {
         } = (await this.gql.mutate(UpdateNote, {
             id: noteId,
             userId,
-            set: { ...noteProperties, last_modified: new Date().toISOString() },
+            set: {
+                title: noteProperties.title,
+                subject: noteProperties.subject,
+                date: noteProperties.date,
+                content: noteProperties.content,
+                done: noteProperties.done,
+                last_modified: new Date().toISOString(),
+            },
         } as UpdateNoteMutationVariables)) as { data: UpdateNoteMutation };
 
         return updated == 0 ? null : noteId;
