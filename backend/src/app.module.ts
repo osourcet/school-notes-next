@@ -12,7 +12,6 @@ import { GqlClientService } from './gql-client/gql-client.service';
 import { NotesService } from './notes/notes.service';
 import { NotesController } from './notes/notes.controller';
 import { NotesModule } from './notes/notes.module';
-import { Markdown2pdfService } from './markdown2pdf/markdown2pdf.service';
 import { MarkdownToPdfService } from './markdown-to-pdf/markdown-to-pdf.service';
 
 @Module({
@@ -35,7 +34,6 @@ import { MarkdownToPdfService } from './markdown-to-pdf/markdown-to-pdf.service'
         UserService,
         GqlClientService,
         NotesService,
-        Markdown2pdfService,
         MarkdownToPdfService,
     ],
 })
