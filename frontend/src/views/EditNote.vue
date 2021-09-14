@@ -101,7 +101,7 @@
                     Zurück
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="create"> Notiz erstellen </v-btn>
+                <v-btn color="primary" @click="create"> Notiz ändern </v-btn>
             </v-card-actions>
         </v-card>
     </div>
@@ -153,8 +153,6 @@ export default Vue.extend({
 
             if (!this.valid) return;
 
-            console.log(!!this.important);
-
             try {
                 await (store.getters.axios as AxiosInstance).put(
                     `/notes/edit/${this.id}`,
@@ -172,6 +170,9 @@ export default Vue.extend({
                         },
                     },
                 );
+
+                store.dispatch('showInfo', 'Sie haben eine Notiz geändert.');
+                this.$router.push({ path: '/notes' }).catch(() => {}); // eslint-disable-line
             } catch (error) {
                 console.log(error.response.data);
             }
@@ -191,8 +192,6 @@ export default Vue.extend({
                     },
                 },
             );
-
-            console.log(data);
 
             this.title = data.title;
             this.important = data.important;

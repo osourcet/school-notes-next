@@ -13,6 +13,7 @@
         "baseUrl": ".",
         "types": ["webpack-env", "jest"],
         "paths": {
+            "~/*": ["node_modules/*"],
             "@/*": ["src/*"],
             "@c/*": ["src/components/*"],
             "@a/*": ["src/assets/*"]

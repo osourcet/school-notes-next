@@ -162,6 +162,9 @@ export default Vue.extend({
                         },
                     },
                 );
+
+                store.dispatch('showInfo', 'Sie haben eine Notiz erstellt.');
+                this.$router.push({ path: '/notes' }).catch(() => {}); // eslint-disable-line
             } catch (error) {
                 console.log(error.response.data);
             }

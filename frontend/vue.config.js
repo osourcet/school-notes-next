@@ -9,6 +9,8 @@ module.exports = {
     chainWebpack: (config) => {
         config.resolve.alias.set('@a', path.resolve(__dirname, 'src/assets/'));
 
+        config.resolve.alias.set('~', path.resolve(__dirname, 'node_modules'));
+
         config.resolve.alias.set(
             '@c',
             path.resolve(__dirname, 'src/components/'),
@@ -21,7 +23,8 @@ module.exports = {
         config.module
             .rule('svg')
             .use('vue-svg-loader')
-            .loader('vue-svg-loader').end();
+            .loader('vue-svg-loader')
+            .end();
 
         // config.optimization.minimize(false);
     },

@@ -37,10 +37,14 @@ import {
     UpdateNoteMutationVariables,
     UpdateNoteMutation,
 } from '../gql/gql-interfaces';
+import { MarkdownToPdfService } from 'src/markdown-to-pdf/markdown-to-pdf.service';
 
 @Injectable()
 export class NotesService {
-    constructor(public gql: GqlClientService) {}
+    constructor(
+        public gql: GqlClientService,
+        public mdToPdf: MarkdownToPdfService,
+    ) {}
 
     //#region Get Notes
 
@@ -377,6 +381,39 @@ export class NotesService {
             id: note_id,
             userId: user_id,
         } as DeleteNoteMutationVariables);
+    }
+
+    //#endregion
+
+    //#region download Notes
+
+    async getNoteAsPDF(note_id: string, user_id: string): Promise<Buffer> {
+        const {
+            data: {
+                schoolnotes_notes: [note_db],
+            },
+        } = (await this.gql.query(GetNote, {
+            id: note_id,
+            user_id: user_id,
+        } as GetNoteQueryVariables)) as {
+            data: GetNoteQuery;
+        };
+
+        if (!note_db) throw `No note with id ${note_id} found.`;
+
+        const { __typename, id, ...note } = note_db;
+
+        const md = `
+# ${note.title} <br/>
+__${note.subject}__ <br/>
+__Soll bis zum ${new Date(note.date).getDay()}.${
+            new Date(note.date).getMonth() + 1
+        }.${new Date(note.date).getFullYear()} erledigt werden__ <br/>
+
+${note.content}
+        `;
+
+        return await this.mdToPdf.convert(md);
     }
 
     //#endregion

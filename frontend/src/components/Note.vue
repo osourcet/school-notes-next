@@ -38,9 +38,15 @@
 
                     <v-divider class="mt-2 mb-2"></v-divider>
 
-                    <v-col cols="12"
-                        ><vue-showdown :markdown="content"></vue-showdown
-                    ></v-col>
+                    <v-col cols="12">
+                        <vue-showdown
+                            :markdown="content"
+                            flavor="github"
+                            :extensions="['showdownHighlight']"
+                            class="markdown-body"
+                        >
+                        </vue-showdown>
+                    </v-col>
                 </v-row>
             </v-container>
         </v-card-text>
@@ -217,5 +223,9 @@ export default Vue.extend({
 <style lang="scss">
 .note-selected {
     border: 3px solid #1976d2 !important;
+}
+
+.theme--light.v-application code {
+    background-color: rgba(0, 0, 0, 0);
 }
 </style>

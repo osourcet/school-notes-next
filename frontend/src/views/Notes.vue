@@ -57,6 +57,9 @@
                 </v-col>
             </v-row>
         </v-container>
+
+        <!-- Contextmenu -->
+
         <v-menu
             v-model="contextMenu"
             :position-x="contextMenuX"
@@ -118,6 +121,46 @@
                 </v-list-item>
             </v-list>
         </v-menu>
+
+        <!-- Share Dialog -->
+
+        <v-dialog v-if="dialogShare" max-width="600">
+            <v-card>
+                <v-toolbar color="primary" dark>
+                    <span class="text-h6">
+                        <v-icon> mdi-sort </v-icon> Sortierung
+                    </span>
+                </v-toolbar>
+
+                <v-card-text class="mt-5">
+                    <v-container fluid>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-alert type="warning">
+                                    Die Notiz ist öffentlich. <br />
+                                    Sie kann von jeden angeschaut werden!
+                                </v-alert>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field
+                                    v-model="dialogShareLink"
+                                    label="Notizen durchsuchen ..."
+                                    hide-details="auto"
+                                    solo
+                                    prepend-inner-icon="mdi-magnify"
+                                    class="mx-4"
+                                    readonly
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+
+                <v-card-actions class="justify-end">
+                    <v-btn text @click="dialogShare = false"> OK </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -126,6 +169,7 @@ import Vue from 'vue';
 import Note from '@c/Note.vue';
 import NotesToolbar from '@c/NotesToolbar.vue';
 import store from '../store';
+import { AxiosInstance, AxiosResponse } from 'axios';
 
 export default Vue.extend({
     name: 'Notes',
@@ -153,6 +197,9 @@ export default Vue.extend({
         },
 
         search: '',
+
+        dialogShare: false,
+        dialogShareLink: '',
     }),
 
     components: {
@@ -188,11 +235,11 @@ export default Vue.extend({
             this.contextMenuItems = [];
             if (this.note == null) return;
 
-            this.contextMenuItems.push({
-                icon: 'mdi-checkbox-marked-outline',
-                text: 'Auswählen',
-                click: () => {}, // eslint-disable-line
-            });
+            // this.contextMenuItems.push({
+            //     icon: 'mdi-checkbox-marked-outline',
+            //     text: 'Auswählen',
+            //     click: () => {}, // eslint-disable-line
+            // });
 
             this.contextMenuItems.push({
                 icon: 'mdi-pencil',
@@ -205,9 +252,71 @@ export default Vue.extend({
             });
 
             this.contextMenuItems.push({
-                icon: 'mdi-share',
+                icon: 'mdi-file-pdf-box',
+                text: 'Als PDF herunterladen',
+                click: async () => {
+                    store.dispatch('showInfo', 'Notiz wird als PDF erstellt.');
+
+                    try {
+                        // Dowload the PDF
+                        const pdf = (await (
+                            store.getters.axios as AxiosInstance
+                        ).get(`/notes/pdf/${this.note}`, {
+                            headers: {
+                                Authorization: store.getters['user/jwt'],
+                            },
+                            responseType: 'blob',
+                        })) as AxiosResponse<Blob>;
+
+                        // Create a URL to the PDF
+                        const url = window.URL.createObjectURL(
+                            new Blob([pdf.data]),
+                        );
+
+                        // Save the PDF
+                        const link = document.createElement('a');
+                        link.href = url;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } catch (error) {
+                        console.log(error.response.data);
+                        store.dispatch(
+                            'showInfo',
+                            'Beim erstellen der PDF Datei ist ein Fehler aufgetreten.',
+                        );
+                    }
+                },
+            });
+
+            this.contextMenuItems.push({
+                icon: 'mdi-share-variant',
                 text: 'Teilen',
-                click: () => {}, // eslint-disable-line
+                click: async () => {
+                    try {
+                        // Make Note public
+                        await (store.getters.axios as AxiosInstance).put(
+                            `/notes/public/${this.note}`,
+                            {
+                                headers: {
+                                    Authorization: store.getters['user/jwt'],
+                                },
+                            },
+                        );
+
+                        this.dialogShareLink = `${window.location.protocol}//${
+                            window.location.host
+                        }/shared?notes=${JSON.stringify([this.note])}`;
+
+                        this.dialogShare = true;
+                    } catch (error) {
+                        console.log(error.response.data);
+                        store.dispatch(
+                            'showInfo',
+                            'Die Notiz konnte nicht geteilt werden.',
+                        );
+                    }
+                }, // eslint-disable-line
             });
 
             this.contextMenuItems.push({

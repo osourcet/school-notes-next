@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    Header,
     HttpStatus,
     Param,
     Put,
@@ -51,6 +52,21 @@ export class NotesController {
     ) {
         try {
             res.json(await this.notesService.getNote(id, req.user.id));
+        } catch (error) {
+            res.status(HttpStatus.NOT_FOUND).json({ error });
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('pdf/:id')
+    @Header('Content-type', 'application/pdf')
+    async getNoteAsPDF(
+        @Param('id') id: string,
+        @Req() req: { user: { id: string } },
+        @Res() res: Response,
+    ) {
+        try {
+            res.json(await this.notesService.getNoteAsPDF(id, req.user.id));
         } catch (error) {
             res.status(HttpStatus.NOT_FOUND).json({ error });
         }
