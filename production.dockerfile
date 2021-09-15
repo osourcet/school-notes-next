@@ -1,4 +1,5 @@
 FROM node:lts
+USER root
 
 EXPOSE 3000
 
