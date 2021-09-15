@@ -45,7 +45,7 @@ RUN apt-get update && \
         lsb-release \
         wget \
         xdg-utils && \
-    apt-get -f install \
+    apt-get -f install && \
     rm -r -d -f /var/lib/apt/lists/*
 
 # Nest App
