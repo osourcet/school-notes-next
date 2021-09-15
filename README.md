@@ -2,7 +2,7 @@
 
 [👉Template](https://github.com/felix-07-11/TS-vueJS-vuetify-nestJS)
 
-## Useage
+## Usage
 
 ```sh
 git clone https://github.com/osourcet/school-notes-next.git
