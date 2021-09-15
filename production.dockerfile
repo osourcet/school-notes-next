@@ -46,7 +46,7 @@ RUN apt-get update && \
         wget \
         xdg-utils && \
     apt-get -f install \
-    rm -rdf /var/lib/apt/lists/*
+    rm -r -d -f /var/lib/apt/lists/*
 
 # Nest App
 COPY production/dist/ ./dist/
