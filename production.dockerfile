@@ -6,7 +6,7 @@ RUN mkdir /app
 
 WORKDIR /app
 
-RUN apt-get install libnss3-dev
+RUN apt-get update && apt-get -y install libnss3-dev && apt-get -y -f install
 
 # Nest App
 COPY production/dist/ ./dist/
