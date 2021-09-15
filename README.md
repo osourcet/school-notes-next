@@ -11,7 +11,7 @@ cd school-notes-next/
 
 sh production.sh
 
-docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:latest # App run on port 8080
+docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:latest # App runs on port 8080
 ```
 
 ## Needed environment variables
@@ -40,7 +40,7 @@ docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:lat
 | GET    | /api/notes/lastmodified       |           ✅            |                                                          | 200; 401           | `{ lastmodified: string; }`          |
 | GET    | /api/notes/public             |           ❌            |                                                          | 200                | `Note[]`                             |
 | GET    | /api/notes/public/:id         |           ❌            |                                                          | 200; 404           | `Note`                               |
-| PUT    | /api/notes/                   |           ✅            | `(NoteIncoming \| Note)[]`                               | 200; 401           |                                      |
+| PUT    | /api/notes/                   |           ✅            | `NoteIncoming[]`                                         | 200; 401           |                                      |
 | PUT    | /api/notes/create             |           ✅            | `NoteIncoming`                                           | 201; 401           |                                      |
 | PUT    | /api/notes/public/:id         |           ✅            |                                                          | 200; 401           |                                      |
 | PUT    | /api/notes/private/:id        |           ✅            |                                                          | 200; 401           |                                      |
@@ -48,6 +48,7 @@ docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:lat
 | PUT    | /api/notes/unsubscribe/:id    |           ✅            |                                                          | 200; 401           |                                      |
 | PUT    | /api/notes/edit/:id           |           ✅            | `NoteIncoming`                                           | 200; 401; 404      |                                      |
 | PUT    | /api/notes/edit/:id/:property |           ✅            | `{ value: any }`                                         | 200; 400; 401; 404 |                                      |
+| PUT    | /api/notes/delete/:id         |           ✅            |                                                          | 200; 401           |                                      |
 | DELETE | /api/notes/delete/:id         |           ✅            |                                                          | 200; 401           |                                      |
 
 ## SocketIO LiveSync Events
@@ -65,8 +66,8 @@ docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:lat
 
 ```ts
 interface NoteIncoming {
-    id?: string;
-    last_modified?: string;
+    id?: string; // UUIDv4
+    last_modified?: string; // ISO timestamp
     title: string;
     important: boolean;
     subject: string;
@@ -76,11 +77,11 @@ interface NoteIncoming {
 }
 
 interface Note {
-    id: string;
+    id: string; // UUIDv4
     public: boolean;
     readonly: boolean;
-    last_modified: string;
-    owner: string;
+    last_modified: string; // ISO timestamp
+    owner: string; // UUIDv4
     title: string;
     important: boolean;
     subject: string;
