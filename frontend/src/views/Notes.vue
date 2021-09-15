@@ -268,6 +268,8 @@ export default Vue.extend({
                             responseType: 'blob',
                         })) as AxiosResponse<Blob>;
 
+                        console.log('test', pdf);
+
                         // Create a URL to the PDF
                         const url = window.URL.createObjectURL(
                             new Blob([pdf.data]),
@@ -297,6 +299,7 @@ export default Vue.extend({
                         // Make Note public
                         await (store.getters.axios as AxiosInstance).put(
                             `/notes/public/${this.note}`,
+                            {},
                             {
                                 headers: {
                                     Authorization: store.getters['user/jwt'],

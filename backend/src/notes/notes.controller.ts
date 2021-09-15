@@ -68,6 +68,8 @@ export class NotesController {
         try {
             res.json(await this.notesService.getNoteAsPDF(id, req.user.id));
         } catch (error) {
+            console.log(error);
+
             res.status(HttpStatus.NOT_FOUND).json({ error });
         }
     }

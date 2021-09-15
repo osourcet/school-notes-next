@@ -399,6 +399,8 @@ export class NotesService {
             data: GetNoteQuery;
         };
 
+        console.log('1', note_db);
+
         if (!note_db) throw `No note with id ${note_id} found.`;
 
         const { __typename, id, ...note } = note_db;
@@ -412,6 +414,8 @@ __Soll bis zum ${new Date(note.date).getDay()}.${
 
 ${note.content}
         `;
+
+        console.log('2', md);
 
         return await this.mdToPdf.convert(md);
     }
