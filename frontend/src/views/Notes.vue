@@ -124,11 +124,11 @@
 
         <!-- Share Dialog -->
 
-        <v-dialog v-if="dialogShare" max-width="600">
+        <v-dialog v-model="dialogShare" max-width="600">
             <v-card>
                 <v-toolbar color="primary" dark>
                     <span class="text-h6">
-                        <v-icon> mdi-sort </v-icon> Sortierung
+                        <v-icon> mdi-share-variant </v-icon> Notiz teilen
                     </span>
                 </v-toolbar>
 
@@ -136,7 +136,7 @@
                     <v-container fluid>
                         <v-row>
                             <v-col cols="12">
-                                <v-alert type="warning">
+                                <v-alert type="info">
                                     Die Notiz ist öffentlich. <br />
                                     Sie kann von jeden angeschaut werden!
                                 </v-alert>
@@ -147,9 +147,12 @@
                                     label="Notizen durchsuchen ..."
                                     hide-details="auto"
                                     solo
-                                    prepend-inner-icon="mdi-magnify"
                                     class="mx-4"
                                     readonly
+                                    append-icon="mdi-content-copy"
+                                    append-outer-icon="mdi-qrcode"
+                                    @click:append="() => {}"
+                                    @click:append-outer="() => {}"
                                 ></v-text-field>
                             </v-col>
                         </v-row>
@@ -157,6 +160,11 @@
                 </v-card-text>
 
                 <v-card-actions class="justify-end">
+                    <v-btn color="primary">
+                        <v-icon class="mr-3"> mdi-web-off </v-icon>
+                        Notiz nicht mehr teilen
+                    </v-btn>
+                    <v-spacer></v-spacer>
                     <v-btn text @click="dialogShare = false"> OK </v-btn>
                 </v-card-actions>
             </v-card>
