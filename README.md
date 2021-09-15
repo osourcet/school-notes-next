@@ -29,9 +29,9 @@ docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:lat
 | POST   | /api/user/register            |           ❌            | `{ username: string; email: string; password: string; }` | 201; 403           |                                      |
 | POST   | /api/user/login               |           ❌            | `{ username: string; password: string; }`                | 308                |                                      |
 | POST   | /api/auth/login               |           ❌            | `{ username: string; password: string; }`                | 200; 403           | `{ token: string; }`                 |
-| POST   | ~~/api/user/changepassword~~  |           ✅            | `{ old: string; new: string; }`                          | 200; 401           |                                      |
-| POST   | ~~/api/user/resetpassword~~   |           ❌            | `{ token: string; password: string; }`                   | 200; 403           |                                      |
-| DELETE | ~~/api/user~~                 |           ❌            |                                                          | 200; 403           |                                      |
+| ~~POST~~   | ~~/api/user/changepassword~~  |           ✅            | `{ old: string; new: string; }`                          | 200; 401           |                                      |
+| ~~POST~~   | ~~/api/user/resetpassword~~   |           ❌            | `{ token: string; password: string; }`                   | 200; 403           |                                      |
+| ~~DELETE~~ | ~~/api/user~~                 |           ❌            |                                                          | 200; 403           |                                      |
 |        |                               |                         |                                                          |                    |                                      |
 | GET    | /api/notes                    |           ✅            |                                                          | 200; 401           | `{ own: Note[]; readonly: Note[]; }` |
 | GET    | /api/notes/own                |           ✅            |                                                          | 200; 401           | `Note[]`                             |
