@@ -71,7 +71,7 @@ interface NoteIncoming {
     title: string;
     important: boolean;
     subject: string;
-    date: string;
+    date: string; // ISO timestamp
     content: string;
     done: boolean;
 }
@@ -85,7 +85,7 @@ interface Note {
     title: string;
     important: boolean;
     subject: string;
-    date: string;
+    date: string; // ISO timestamp
     content: string;
     done: boolean;
 }
