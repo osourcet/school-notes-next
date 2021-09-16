@@ -156,7 +156,7 @@ export class NotesController {
 
         try {
             const id = await this.notesService.createNote(req.user.id, note);
-            this.notesGateway.server.to(req.user.id).emit('note:changed', id);
+            this.notesGateway.server.to(req.user.id).emit('note:created', id);
             res.sendStatus(HttpStatus.OK);
         } catch (error) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
@@ -170,6 +170,7 @@ export class NotesController {
         @Param('id') id: string,
     ) {
         await this.notesService.startShareNote(req.user.id, id);
+        this.notesGateway.server.to(req.user.id).emit('note:changed', id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -178,7 +179,22 @@ export class NotesController {
         @Req() req: { user: { id: string } },
         @Param('id') id: string,
     ) {
+        const {
+            data: { schoolnotes_read_only_notes: user },
+        } = (await this.notesService.gql.query(GetReadOnlyNoteUser, {
+            id,
+        } as GetReadOnlyNoteUserQueryVariables)) as {
+            data: GetReadOnlyNoteUserQuery;
+        };
+
+        user.forEach(({ user_id }) =>
+            this.notesGateway.server
+                .to(user_id)
+                .emit('note-readonly:unsubscribed', id),
+        );
+
         await this.notesService.stopShareNote(req.user.id, id);
+        this.notesGateway.server.to(req.user.id).emit('note:changed', id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -188,6 +204,9 @@ export class NotesController {
         @Param('id') id: string,
     ) {
         await this.notesService.addSharedNote(req.user.id, id);
+        this.notesGateway.server
+            .to(req.user.id)
+            .emit('note-readonly:subscribed', id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -197,6 +216,9 @@ export class NotesController {
         @Param('id') id: string,
     ) {
         await this.notesService.removeSharedNote(req.user.id, id);
+        this.notesGateway.server
+            .to(req.user.id)
+            .emit('note-readonly:unsubscribed', id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -289,6 +311,22 @@ export class NotesController {
         @Req() req: { user: { id: string } },
         @Param('id') id: string,
     ) {
+        const {
+            data: { schoolnotes_read_only_notes: user },
+        } = (await this.notesService.gql.query(GetReadOnlyNoteUser, {
+            id,
+        } as GetReadOnlyNoteUserQueryVariables)) as {
+            data: GetReadOnlyNoteUserQuery;
+        };
+
+        console.log(user);
+
+        user.forEach(({ user_id }) =>
+            this.notesGateway.server
+                .to(user_id)
+                .emit('note-readonly:unsubscribed', id),
+        );
+
         await this.notesService.deleteNote(req.user.id, id);
         this.notesGateway.server.to(req.user.id).emit('note:deleted', id);
     }

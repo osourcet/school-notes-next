@@ -54,14 +54,17 @@ docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:lat
 
 ## SocketIO LiveSync Events
 
-| Event                   | Description                                        | Payload      |
-| ----------------------- | -------------------------------------------------- | ------------ |
-| `notes:changed`         | will be emited if the notes of a user was uploaded |              |
-|                         |                                                    |              |
-| `note:changed`          | will be emited if a note was created or edited     | `id: string` |
-| `note:deleted`          | will be emited if a note was deleted               | `id: string` |
-|                         |                                                    |              |
-| `note-readonly:changed` | will be emited if a readonly note was edited       | `id: string` |
+| Event                        | Description                                          | Payload      |
+| ---------------------------- | ---------------------------------------------------- | ------------ |
+| `notes:changed`              | will be emited if the notes of a user was uploaded   |              |
+|                              |                                                      |              |
+| `note:created`               | will be emited if a note was created or edited       | `id: string` |
+| `note:changed`               | will be emited if a note was edited                  | `id: string` |
+| `note:deleted`               | will be emited if a note was deleted                 | `id: string` |
+|                              |                                                      |              |
+| `note-readonly:subscribed`   | will be emited if a user subcribed a readonly note   | `id: string` |
+| `note-readonly:changed`      | will be emited if a readonly note was edited         | `id: string` |
+| `note-readonly:unsubscribed` | will be emited if a user unsubcribed a readonly note | `id: string` |
 
 ## TypeScript Interfaces
 
