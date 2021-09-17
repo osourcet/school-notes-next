@@ -26,15 +26,15 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN }}
+          username: osourcet
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the hello-world Docker image
         run: |
           docker tag school-notes-next:latest ghcr.io/$username/school-notes-next:latest
           docker push ghcr.io/$username/school-notes-next:latest
         env:
-          username: ${{ github.actor }}
+          username: osourcet
 
       # - name: Updaload docker_image
       #   uses: svenstaro/upload-release-action@v2
