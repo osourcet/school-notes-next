@@ -5,11 +5,7 @@
 ## Usage
 
 ```sh
-git clone https://github.com/osourcet/school-notes-next.git
-
-cd school-notes-next/
-
-sh production.sh
+docker pull ghcr.io/osourcet/school-notes-next:latest
 
 docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:latest # App runs on port 8080
 ```
