@@ -27,7 +27,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.TOKEN }}
 
       - name: Build the hello-world Docker image
         run: |
@@ -39,6 +39,6 @@ jobs:
       # - name: Updaload docker_image
       #   uses: svenstaro/upload-release-action@v2
       #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     repo_token: ${{ secrets.TOKEN }}
       #     file: ./school-notes-next_dockerimage.tar
       #     tag: ${{ github.ref }}
