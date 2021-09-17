@@ -1,10 +1,6 @@
-
 name: Build dockerimage
 
-on:
-  push:
-    tags:
-      - "*"
+on: [push, pull_request]
 
 jobs:
   publish-docker:
@@ -35,7 +31,6 @@ jobs:
           docker push ghcr.io/$username/school-notes-next:latest
         env:
           username: osourcet
-
       # - name: Updaload docker_image
       #   uses: svenstaro/upload-release-action@v2
       #   with:
