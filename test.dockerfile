@@ -55,10 +55,11 @@ COPY test/package.json .
 
 RUN npm install --save
 
-RUN useradd -r -g node -G audio,video node \
-    && chown -R node:node /app
+RUN groupadd -r node-user \
+    && useradd -r -g node-user -G audio,video node-user \
+    && chown -R node-user:node-user /app 
 
-USER node
+USER node-user
 WORKDIR /app
 
 CMD ["npm", "run", "start:prod"]
