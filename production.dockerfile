@@ -55,9 +55,8 @@ COPY production/package.json .
 
 RUN npm install --save
 
-RUN groupadd -r node \
-    && useradd -r -g node -G audio,video node \
-    && chown -R node:node /app 
+RUN useradd -r -g node -G audio,video node \
+    && chown -R node:node /app
 
 USER node
 WORKDIR /app
