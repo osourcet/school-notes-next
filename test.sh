@@ -27,7 +27,7 @@ echo '\ntest bundle ready\n'
 
 echo '\nBuild Dockerimage\n'
 
-docker build -t $PROJECTNAME:test -f test.dockerfile .
+docker build -t $PROJECTNAME:test -f test.dockerfile --privileged .
 
 rm -dr test/
 
