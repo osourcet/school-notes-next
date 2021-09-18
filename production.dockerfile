@@ -47,8 +47,7 @@ RUN apt-get update && \
     wget \
     xdg-utils && \
     apt-get -f install && \
-    rm -r -d -f /var/lib/apt/lists/* && \
-    sysctl -w kernel.unprivileged_userns_clone=1
+    rm -r -d -f /var/lib/apt/lists/*
 
 # Nest App
 COPY production/dist/ ./dist/
