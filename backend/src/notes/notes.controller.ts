@@ -66,7 +66,7 @@ export class NotesController {
         @Res() res: Response,
     ) {
         try {
-            res.json(await this.notesService.getNoteAsPDF(id, req.user.id));
+            res.send(await this.notesService.getNoteAsPDF(id, req.user.id));
         } catch (error) {
             console.log(error);
 

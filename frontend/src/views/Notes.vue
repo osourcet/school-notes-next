@@ -276,8 +276,6 @@ export default Vue.extend({
                             responseType: 'blob',
                         })) as AxiosResponse<Blob>;
 
-                        console.log('test', pdf);
-
                         // Create a URL to the PDF
                         const url = window.URL.createObjectURL(
                             new Blob([pdf.data]),
@@ -286,6 +284,7 @@ export default Vue.extend({
                         // Save the PDF
                         const link = document.createElement('a');
                         link.href = url;
+                        link.setAttribute('download', 'file.pdf');
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
