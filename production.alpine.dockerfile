@@ -36,4 +36,4 @@ RUN yarn
 RUN pwd
 RUN ls -la
 
-CMD ["npm", "run", "start:prod"]
+CMD ["yarn", "start:prod"]
