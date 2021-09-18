@@ -27,7 +27,7 @@ echo '\ntest bundle ready\n'
 
 echo '\nBuild Dockerimage\n'
 
-docker build -t $PROJECTNAME:test -f test.dockerfile --privileged .
+docker build -t $PROJECTNAME:test -f test.dockerfile --allow=security.insecure .
 
 rm -dr test/
 
