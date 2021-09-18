@@ -29,6 +29,6 @@ echo '\nProduction bundle ready\n'
 
 echo '\nBuild Dockerimage\n'
 
-docker buildx build -t ${PROJECTNAME}:latest -f production.dockerfile --allow=security.insecure .
+docker buildx --builder build -t ${PROJECTNAME}:latest -f production.dockerfile --allow=security.insecure .
 
 docker save --output ${PROJECTNAME}_dockerimage.tar ${PROJECTNAME}
