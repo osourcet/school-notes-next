@@ -7,7 +7,12 @@
 ```sh
 docker pull ghcr.io/osourcet/school-notes-next:latest
 
-docker run --name schoolnotes -p 8080:3000 --env-file .env school-notes-next:latest # App runs on port 8080
+docker run \
+    --name schoolnotes \
+    -p 8080:3000 \
+    --env-file .env \
+    --sysctl kernel.unprivileged_userns_clone=1 \
+    ghcr.io/osourcet/school-notes-next:latest # App runs on port 8080
 ```
 
 ## Needed environment variables
