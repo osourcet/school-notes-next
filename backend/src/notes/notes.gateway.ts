@@ -1,5 +1,8 @@
 import {
+    ConnectedSocket,
+    MessageBody,
     OnGatewayConnection,
+    SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
@@ -14,21 +17,46 @@ export class NotesGateway implements OnGatewayConnection {
     public server!: Server;
 
     async handleConnection(client: Socket) {
-        const user = await this.authService
-            .verify(client.handshake.headers.authorization as string)
-            .catch(() => {
-                client.disconnect();
-            });
+        try {
+            const user = await this.authService.verify(
+                client.handshake.headers.authorization as string,
+            );
 
-        console.log('user', user);
-        console.log('headers', client.handshake.headers);
+            console.log('user', user);
+            console.log('headers', client.handshake.headers);
 
-        if (!user) client.disconnect();
+            if (user) {
+                console.log(user);
 
-        console.log(user);
+                const { id } = user;
 
-        const { id } = user;
+                client.join(id);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-        client.join(id);
+    @SubscribeMessage('auth')
+    async auth(
+        @MessageBody() authorization: string,
+        @ConnectedSocket() client: Socket,
+    ) {
+        try {
+            const user = await this.authService.verify(authorization);
+
+            console.log('user', user);
+            console.log('headers', authorization);
+
+            if (user) {
+                console.log(user);
+
+                const { id } = user;
+
+                client.join(id);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

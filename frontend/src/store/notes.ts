@@ -16,7 +16,7 @@ const noteModule = {
     },
 
     actions: {
-        async init({ state, dispatch }) {
+        async init({ state }) {
             try {
                 const { data } = await (
                     this.getters.axios as AxiosInstance

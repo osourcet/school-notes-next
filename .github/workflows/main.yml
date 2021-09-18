@@ -25,7 +25,7 @@ jobs:
           username: osourcet
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build the hello-world Docker image
+      - name: Push Docker image to ghcr.io
         run: |
           docker tag school-notes-next:latest ghcr.io/$username/school-notes-next:latest
           docker push ghcr.io/$username/school-notes-next:latest
