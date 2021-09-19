@@ -71,9 +71,9 @@
                             >
                                 <span>
                                     Um auf die Notizen-Übersicht zu kommen,
-                                    klicken sie auf das
+                                    klicke auf das
                                     <v-icon> mdi-notebook-outline </v-icon>
-                                    Symbol oben in der Navigation-Leiste.
+                                    Symbol oben in der Navigationsleiste.
                                 </span>
                             </v-col>
                         </v-row>
@@ -86,7 +86,7 @@
                                     Die Notizen sind in 3 Kategorien unterteilt:
                                     Normal, Wichtig, Erledigt. <br />
                                     Wichtige Notizen sind gelb markiert,
-                                    erledigte, grün.
+                                    erledigte grün.
                                 </span>
                             </v-col>
                         </v-row>
@@ -108,17 +108,17 @@
                                 class="d-flex justify-center align-center"
                             >
                                 <span>
-                                    Wenn sie auf der Notizen-Übersicht (
+                                    Wenn du auf der Notizen-Übersicht (
                                     <v-icon> mdi-notebook-outline </v-icon> )
-                                    sind, können sie vile Aktionen über ein
-                                    Kontextmenu machen. <br />
-                                    Das Kontextmenu öffnen sie, indem sie mit
-                                    der rechte Maustaste drücken. <br /><br />
-                                    Mit dem Kontextmenu können sie eine Notiz
-                                    erstellen, die Notizen sotieren, wenn sie
-                                    das Kontextmenu auf eine Notiz öffnen, kann
-                                    die Notiz z. B. bearbeitet, geteilt oder
-                                    gelöscht werden.
+                                    bist, kannst du viele Aktionen über ein
+                                    Kontextmenü machen. <br />
+                                    Das Kontextmenü öffnest du, indem du mit der
+                                    rechte Maustaste drückst. <br /><br />
+                                    Mit dem Kontextmenü kannst du eine Notiz
+                                    erstellen oder die Notizen sortieren. Wenn
+                                    du das Kontextmenu auf einer Notiz öffnest,
+                                    kann die Notiz z. B. bearbeitet, geteilt
+                                    oder gelöscht werden.
                                 </span>
                             </v-col>
                         </v-row>
@@ -140,24 +140,24 @@
                                 class="d-flex justify-center align-center"
                             >
                                 <span>
-                                    Sobald sie auf der Notizen-Übersicht
-                                    (<v-icon> mdi-notebook-outline </v-icon>)
-                                    sind, können sie eine Notiz erstellen, indem
-                                    sie auf das
-                                    <v-icon> mdi-plus </v-icon> klicken.
+                                    Sobald du auf der Notizen-Übersicht (<v-icon>
+                                        mdi-notebook-outline </v-icon
+                                    >) bist, kannst du eine Notiz erstellen,
+                                    indem du auf das
+                                    <v-icon> mdi-plus </v-icon> klickst.
                                     <br /><br />
-                                    Außerdem können sie eine Notiz über das
-                                    Kontextmenu erstellen.
+                                    Außerdem kannst du eine Notiz über das
+                                    Kontextmenü erstellen.
                                     <br /><br />
-                                    Eine Notiz kann kann als erledigt markiert
-                                    werden, indem sie auf den
-                                    <v-icon> mdi-check </v-icon>-Button klicken.
+                                    Eine Notiz kann als erledigt markiert
+                                    werden, indem du auf den
+                                    <v-icon> mdi-check </v-icon>-Button klickst.
                                     <br /><br />
-                                    Eine Notiz kann bearbeitet werden, wenn sie
+                                    Eine Notiz kann bearbeitet werden, wenn du
                                     auf der Notiz den
                                     <v-icon> mdi-pencil </v-icon>-Button oder im
-                                    Kontextmenu auf
-                                    <v-icon> mdi-pencil </v-icon> drücken.
+                                    Kontextmenü auf
+                                    <v-icon> mdi-pencil </v-icon> drückst.
                                 </span>
                             </v-col>
                         </v-row>
@@ -179,7 +179,7 @@
                                 class="d-flex justify-center align-center"
                             >
                                 <span>
-                                    Sie haben nun die grundlegen Funktionen von
+                                    Du hast nun die grundlegenden Funktionen von
                                     School-Notes gelernt. <br /><br />
                                     Weitere Funktionen werden auf der
                                     Hilfe-Seite erklärt.
@@ -197,7 +197,7 @@
                                             .catch(() => {})
                                     "
                                 >
-                                    Hilfe Seite öffnen
+                                    Hilfe-Seite öffnen
                                 </v-btn>
                             </v-col>
 
@@ -208,9 +208,9 @@
                                 class="d-flex justify-center align-center"
                             >
                                 <span>
-                                    Sie können auch Schoolnotes auf dem
+                                    Du kannst auch School Notes auf dem
                                     Smartphone nutzen. Wenn eine Notiz fällig
-                                    ist, werden sie benachrichtigt.
+                                    ist, wirst du benachrichtigt.
                                     <br />
                                     <span class="font-weight-bold">
                                         Bald verfügbar!
@@ -287,7 +287,7 @@ export default Vue.extend({
                 case 2:
                     return 'Notizen';
                 case 3:
-                    return 'Kontextmenu';
+                    return 'Kontextmenü';
                 case 4:
                     return 'Notizen erstellen & bearbeiten';
                 case 5:
