@@ -153,7 +153,7 @@ export default Vue.extend({
         }[],
         note: null as null | string,
         followed: false,
-        publicNotes: [] as Note[],
+        sharedNotes: [] as Note[],
         notAutherizedDialog: false,
 
         sort: {
@@ -168,7 +168,7 @@ export default Vue.extend({
         notesSorted() {
             const sn = this.sort.direction == 'asc' ? -1 : 1;
             // eslint-disable-next-line
-            return this.publicNotes.sort((a: any, b: any) => {
+            return this.sharedNotes.sort((a: any, b: any) => {
                 if (a[this.sort.key] < b[this.sort.key]) return -1 * sn;
                 else if (a[this.sort.key] > b[this.sort.key]) return 1 * sn;
                 return 0;
@@ -202,7 +202,15 @@ export default Vue.extend({
             }
 
             try {
-                await store.getters.axios.put(`/notes/copy/${id}`);
+                await store.getters.axios.put(
+                    `/notes/copy/${id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
                 store.dispatch('showInfo', 'Sie folgen nun einer Notiz.');
             } catch (error) {
                 console.log(error);
@@ -217,7 +225,15 @@ export default Vue.extend({
             console.log(id);
 
             try {
-                await store.getters.axios.put(`/notes/subscribe/${id}`);
+                await store.getters.axios.put(
+                    `/notes/subscribe/${id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
                 store.dispatch('showInfo', 'Sie folgen nun einer Notiz.');
             } catch (error) {
                 console.log(error);
@@ -229,7 +245,15 @@ export default Vue.extend({
                 return;
             }
             try {
-                await store.getters.axios.put(`/notes/unsubscribe/${id}`);
+                await store.getters.axios.put(
+                    `/notes/unsubscribe/${id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
                 store.dispatch('showInfo', 'Sie folgen nun einer Notiz.');
             } catch (error) {
                 console.log(error);
@@ -239,8 +263,18 @@ export default Vue.extend({
 
     async mounted() {
         try {
-            const { data } = await store.getters.axios.get('notes/public');
-            this.publicNotes = data;
+            const notes: string[] = JSON.parse(
+                Object.fromEntries(
+                    new URLSearchParams(window.location.search).entries(),
+                ).notes,
+            );
+
+            for await (const id of notes) {
+                const { data } = await store.getters.axios.get(
+                    `notes/public/${id}`,
+                );
+                this.sharedNotes.push(data);
+            }
         } catch (error) {
             console.log(error);
         }

@@ -25,8 +25,17 @@
                 icon
                 v-if="autherized"
                 @click="$router.push({ path: '/settings' }).catch(() => {})"
+                disabled
             >
                 <v-icon> mdi-cog-outline </v-icon>
+            </v-btn>
+
+            <v-btn
+                class="ml-2"
+                icon
+                @click="$router.push({ path: '/help' }).catch(() => {})"
+            >
+                <v-icon> mdi-help-circle-outline </v-icon>
             </v-btn>
 
             <v-btn

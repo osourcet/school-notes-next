@@ -169,7 +169,7 @@
                             <v-col cols="12">
                                 <v-alert type="info">
                                     Die Notiz ist öffentlich. <br />
-                                    Sie kann von jeden angeschaut werden!
+                                    Sie kann von jedem angeschaut werden!
                                 </v-alert>
                             </v-col>
                             <v-col cols="12">
@@ -394,7 +394,7 @@ export default Vue.extend({
                             'Die Notiz konnte nicht geteilt werden.',
                         );
                     }
-                }, // eslint-disable-line
+                },
             });
 
             if (
@@ -411,7 +411,29 @@ export default Vue.extend({
             this.contextMenuItems.push({
                 icon: 'mdi-delete',
                 text: 'Löschen',
-                click: () => {}, // eslint-disable-line
+                click: async () => {
+                    try {
+                        // Delete Note
+                        await (store.getters.axios as AxiosInstance).delete(
+                            `/notes/delete/${this.note}`,
+                            {
+                                headers: {
+                                    Authorization: store.getters['user/jwt'],
+                                },
+                            },
+                        );
+                        store.dispatch(
+                            'showInfo',
+                            'Eine Notiz wurde gelöscht.',
+                        );
+                    } catch (error) {
+                        console.log(error.response.data);
+                        store.dispatch(
+                            'showInfo',
+                            'Die Notiz konnte nicht gelöscht werden.',
+                        );
+                    }
+                },
             });
         },
 
@@ -512,7 +534,7 @@ export default Vue.extend({
                         },
                     },
                 );
-                store.dispatch('showInfo', 'Sie folgen nun einer Notiz.');
+                store.dispatch('showInfo', 'Sie folgen nicht mehr der Notiz.');
             } catch (error) {
                 console.log(error);
             }
@@ -538,10 +560,6 @@ export default Vue.extend({
                 );
             } catch (error) {
                 console.log(error.response.data);
-                store.dispatch(
-                    'showInfo',
-                    'Die Notiz konnte nicht geteilt werden.',
-                );
             }
         },
 
@@ -592,6 +610,8 @@ export default Vue.extend({
     },
 
     mounted() {
+        if (!this.autherized)
+            this.$router.push({ path: '/login' }).catch(() => {}); // eslint-disable-line
         this.makeNotesSorted();
     },
 

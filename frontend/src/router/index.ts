@@ -4,6 +4,7 @@ import VueRouter, { RouteConfig } from 'vue-router';
 import Welcome from '@/views/Welcome.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
+import Help from '@/views/Help.vue';
 import Info from '@/views/Info.vue';
 
 import Public from '@/views/Public.vue';
@@ -22,6 +23,7 @@ const routes: Array<RouteConfig> = [
     { path: '/register', component: Register },
     { path: '/public', component: Public },
     { path: '/shared', component: Shared },
+    { path: '/help', component: Help },
     { path: '/info', component: Info },
 
     { path: '/notes', component: Notes },

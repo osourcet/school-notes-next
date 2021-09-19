@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
@@ -24,6 +26,13 @@ module.exports = {
             .rule('svg')
             .use('vue-svg-loader')
             .loader('vue-svg-loader')
+            .end();
+
+        config.module
+            .rule('md')
+            .test(/\.md$/)
+            .use('raw-loader')
+            .loader('raw-loader')
             .end();
 
         // config.optimization.minimize(false);
