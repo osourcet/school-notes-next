@@ -44,6 +44,7 @@
                         :done="note.done"
                         :readonly="note.readonly"
                         :public="note.public"
+                        :followed="true"
                         @contextmenu.stop="showContextMenu($event, note.id)"
                         @unsubscribe="unsubscribe"
                         @edit="

@@ -23,6 +23,7 @@
                         :done="note.done"
                         :readonly="true"
                         :public="true"
+                        :followed="getNote(note.id)"
                         @contextmenu.stop="showContextMenu($event, note.id)"
                         @copy="copy"
                         @subscribe="subscribe"
@@ -82,7 +83,7 @@
 
                 <v-list-item link v-if="followed && note" @click="unsubscribe">
                     <v-list-item-icon class="mr-3">
-                        <v-icon> mdi-heart </v-icon>
+                        <v-icon> mdi-heart-off </v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
                         <v-list-item-title>
@@ -164,7 +165,7 @@ export default Vue.extend({
 
     computed: {
         autherized: () => store.getters['user/autherized'],
-        notes: () => [],
+        notes: () => store.getters['notes/notes'] as Note[],
         notesSorted() {
             const sn = this.sort.direction == 'asc' ? -1 : 1;
             // eslint-disable-next-line
@@ -177,6 +178,12 @@ export default Vue.extend({
     },
 
     methods: {
+        getNote(id: string): boolean {
+            const note = this.notes.filter((note) => note.id == id)[0];
+            if (note) return true;
+            return false;
+        },
+
         showContextMenu(e: any, note?: string) {
             e?.preventDefault();
             this.contextMenu = false;
@@ -186,14 +193,14 @@ export default Vue.extend({
             if (note) this.note = note;
             else this.note = null;
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            this.followed = this.getNote(this.note);
+
             this.$nextTick(() => {
                 this.contextMenu = true;
             });
         },
-
-        // getNote(id: string): Note | undefined {
-        //     return this.notesSorted.filter((note: any) => note.id == id)[0];
-        // },
 
         async copy(id: string) {
             if (!this.autherized) {

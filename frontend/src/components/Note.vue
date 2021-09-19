@@ -102,7 +102,7 @@
 
             <!-- readonly -->
 
-            <v-tooltip v-if="readonly && followed" bottom>
+            <v-tooltip v-if="readonly && followed && !own" bottom>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn
                         icon
@@ -115,7 +115,7 @@
                 </template>
                 <span>Notiz nicht mehr folgen</span>
             </v-tooltip>
-            <v-tooltip v-if="readonly && !followed" bottom>
+            <v-tooltip v-if="readonly && !followed && !own" bottom>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn
                         icon
@@ -128,7 +128,7 @@
                 </template>
                 <span>Notiz kopieren</span>
             </v-tooltip>
-            <v-tooltip v-if="readonly && !followed" bottom>
+            <v-tooltip v-if="readonly && !followed && !own" bottom>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn
                         icon
@@ -194,6 +194,10 @@ export default Vue.extend({
             default: false,
         },
         followed: {
+            type: Boolean,
+            default: false,
+        },
+        own: {
             type: Boolean,
             default: false,
         },
