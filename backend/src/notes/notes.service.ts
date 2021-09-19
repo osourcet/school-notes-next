@@ -407,10 +407,12 @@ export class NotesService {
 
         const md = `
 # ${note.title} <br/>
+---
 __${note.subject}__ <br/>
 __Soll bis zum ${new Date(note.date).getDay()}.${
             new Date(note.date).getMonth() + 1
         }.${new Date(note.date).getFullYear()} erledigt werden__ <br/>
+---
 
 ${note.content}
         `;
