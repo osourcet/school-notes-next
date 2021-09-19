@@ -157,7 +157,7 @@ export class NotesController {
         try {
             const id = await this.notesService.createNote(req.user.id, note);
             this.notesGateway.server.to(req.user.id).emit('note:created', id);
-            res.sendStatus(HttpStatus.OK);
+            res.sendStatus(HttpStatus.CREATED);
         } catch (error) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
         }

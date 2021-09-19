@@ -1817,7 +1817,7 @@ export const GetLastModified = gql`
   schoolnotes_notes(
     where: {user: {id: {_eq: $id}}}
     limit: 1
-    order_by: {last_modified: asc}
+    order_by: {last_modified: desc}
   ) {
     last_modified
   }

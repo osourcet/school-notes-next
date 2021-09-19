@@ -17,6 +17,7 @@
         "core-js": "^3.6.5",
         "github-markdown-css": "^4.0.0",
         "highlight.js": "^11.2.0",
+        "qrcode.vue": "1.7.0",
         "showdown-highlight": "^2.1.8",
         "socket.io-client": "^4.2.0",
         "vue": "^2.6.11",

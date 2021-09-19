@@ -49,6 +49,8 @@ const noteModule = {
                 });
 
                 socket.on('note:created', async (id: string) => {
+                    console.log('note:created');
+
                     const { data } = await (
                         this.getters.axios as AxiosInstance
                     ).get(`notes/own/${id}`, {

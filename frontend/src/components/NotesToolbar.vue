@@ -161,7 +161,16 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'NotesToolbar',
 
-    props: ['value'],
+    props: {
+        value: {
+            type: String,
+            required: true,
+        },
+        sort: {
+            type: Object,
+            required: true,
+        },
+    },
 
     data: () => ({
         menu: false,

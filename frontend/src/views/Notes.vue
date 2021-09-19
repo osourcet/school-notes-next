@@ -11,6 +11,7 @@
                 <v-col cols="12" class="d-flex justify-center">
                     <notes-toolbar
                         v-model="search"
+                        :sort="sort"
                         @create-note="
                             $router
                                 .push({ path: '/notes/create' })
@@ -83,7 +84,22 @@
                     </v-list-item-content>
                 </v-list-item>
                 <v-subheader>Sortieroptionen</v-subheader>
-                <v-list-item link @click="$emit('create-file')">
+                <v-list-item
+                    link
+                    @click="
+                        () => {
+                            sort = {
+                                sortby: 'title',
+                                direction: 'desc',
+                                showImportant: sort.showImportant,
+                                showNormal: sort.showNormal,
+                                showDone: sort.showDone,
+                                showReadonly: sort.showReadonly,
+                                separate: sort.separate,
+                            };
+                        }
+                    "
+                >
                     <v-list-item-icon class="mr-3">
                         <v-icon>
                             mdi-sort-alphabetical-descending-variant
@@ -93,7 +109,22 @@
                         <v-list-item-title>Nach Titel</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link @click="$emit('create-file')">
+                <v-list-item
+                    link
+                    @click="
+                        () => {
+                            sort = {
+                                sortby: 'date',
+                                direction: 'desc',
+                                showImportant: sort.showImportant,
+                                showNormal: sort.showNormal,
+                                showDone: sort.showDone,
+                                showReadonly: sort.showReadonly,
+                                separate: sort.separate,
+                            };
+                        }
+                    "
+                >
                     <v-list-item-icon class="mr-3">
                         <v-icon> mdi-sort-numeric-descending-variant </v-icon>
                     </v-list-item-icon>
@@ -151,16 +182,39 @@
                                     readonly
                                     append-icon="mdi-content-copy"
                                     append-outer-icon="mdi-qrcode"
-                                    @click:append="() => {}"
-                                    @click:append-outer="() => {}"
+                                    @click:append="
+                                        () => {
+                                            navigator.clipboard.writeText(
+                                                dialogShareLink,
+                                            );
+                                            $store.dispatch(
+                                                'showInfo',
+                                                'Link kopiert.',
+                                            );
+                                        }
+                                    "
+                                    @click:append-outer="
+                                        dialogShareQRCode = !dialogShareQRCode
+                                    "
                                 ></v-text-field>
+                            </v-col>
+                            <v-col
+                                v-if="dialogShareQRCode"
+                                cols="12"
+                                class="d-flex justify-center"
+                            >
+                                <qr-code
+                                    :value="dialogShareLink"
+                                    :size="200"
+                                    render-as="svg"
+                                />
                             </v-col>
                         </v-row>
                     </v-container>
                 </v-card-text>
 
                 <v-card-actions class="justify-end">
-                    <v-btn color="primary">
+                    <v-btn color="primary" @click="makeNotePrivate(note)">
                         <v-icon class="mr-3"> mdi-web-off </v-icon>
                         Notiz nicht mehr teilen
                     </v-btn>
@@ -176,6 +230,7 @@
 import Vue from 'vue';
 import Note from '@c/Note.vue';
 import NotesToolbar from '@c/NotesToolbar.vue';
+import QrCode from 'qrcode.vue';
 import store from '../store';
 import { AxiosInstance, AxiosResponse } from 'axios';
 
@@ -208,11 +263,15 @@ export default Vue.extend({
 
         dialogShare: false,
         dialogShareLink: '',
+        dialogShareQRCode: false,
+
+        navigator: navigator,
     }),
 
     components: {
         Note,
         NotesToolbar,
+        QrCode,
     },
 
     computed: {
@@ -284,7 +343,14 @@ export default Vue.extend({
                         // Save the PDF
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'file.pdf');
+                        link.setAttribute(
+                            'download',
+                            `notiz-${
+                                store.getters['notes/notes'].filter(
+                                    (n: Note) => n.id === this.note,
+                                )[0].title
+                            }.pdf`,
+                        );
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
@@ -314,9 +380,11 @@ export default Vue.extend({
                             },
                         );
 
-                        this.dialogShareLink = `${window.location.protocol}//${
-                            window.location.host
-                        }/shared?notes=${JSON.stringify([this.note])}`;
+                        this.dialogShareLink = encodeURI(
+                            `${window.location.protocol}//${
+                                window.location.host
+                            }/shared?notes=${JSON.stringify([this.note])}`,
+                        );
 
                         this.dialogShare = true;
                     } catch (error) {
@@ -328,6 +396,17 @@ export default Vue.extend({
                     }
                 }, // eslint-disable-line
             });
+
+            if (
+                (store.getters['notes/notes'] as Note[]).filter(
+                    (n) => n.id === this.note,
+                )[0].public
+            )
+                this.contextMenuItems.push({
+                    icon: 'mdi-web-off',
+                    text: 'Teilen beenden',
+                    click: () => this.makeNotePrivate(this.note as string),
+                });
 
             this.contextMenuItems.push({
                 icon: 'mdi-delete',
@@ -436,6 +515,33 @@ export default Vue.extend({
                 store.dispatch('showInfo', 'Sie folgen nun einer Notiz.');
             } catch (error) {
                 console.log(error);
+            }
+        },
+
+        async makeNotePrivate(id: string) {
+            try {
+                // Make Note private
+                await (store.getters.axios as AxiosInstance).put(
+                    `/notes/private/${id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: store.getters['user/jwt'],
+                        },
+                    },
+                );
+
+                this.dialogShare = false;
+                store.dispatch(
+                    'showInfo',
+                    'Die Notiz ist privat und nicht mehr geteilt.',
+                );
+            } catch (error) {
+                console.log(error.response.data);
+                store.dispatch(
+                    'showInfo',
+                    'Die Notiz konnte nicht geteilt werden.',
+                );
             }
         },
 

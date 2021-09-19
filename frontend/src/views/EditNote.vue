@@ -197,7 +197,9 @@ export default Vue.extend({
             this.important = data.important;
             this.done = data.done;
             this.subject = data.subject;
-            this.date = data.date;
+            this.date = `${new Date(data.date).getFullYear()}-${
+                new Date(data.date).getMonth() + 1
+            }-${new Date(data.date).getDate()}`;
             this.content = data.content;
         } catch (error) {
             console.log('error', error);
