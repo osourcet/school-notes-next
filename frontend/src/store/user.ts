@@ -35,6 +35,11 @@ const userModule = {
     },
 
     actions: {
+        async login({ commit, dispatch }, { username, jwt }) {
+            console.log('login');
+            commit('login', { username, jwt });
+            dispatch('notes/init', null, { root: true });
+        },
         async logout({ commit }) {
             console.log('logout');
             commit('logout');

@@ -116,7 +116,7 @@ export default Vue.extend({
                     password: this.password,
                 });
 
-                store.commit('user/login', {
+                store.dispatch('user/login', {
                     username: this.username,
                     jwt: data.token,
                 });
