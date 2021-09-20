@@ -11,7 +11,7 @@ docker run \
     --name schoolnotes \
     -p 8080:3000 \
     --env-file .env \
-    --sysctl kernel.unprivileged_userns_clone=1 \
+    --cap-add=SYS_ADMIN \
     ghcr.io/osourcet/school-notes-next:latest # App runs on port 8080
 ```
 
