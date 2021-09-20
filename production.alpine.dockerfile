@@ -20,12 +20,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # Add user so we don't need --no-sandbox.
-RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
-    && chown -R pptruser:pptruser /app
-
-# Run everything after as non-privileged user.
-USER pptruser
-WORKDIR /app
+RUN addgroup -S pptruser && adduser -S -g pptruser pptruser
 
 # Nest App
 COPY production/dist/ ./dist/
@@ -35,5 +30,11 @@ RUN yarn
 
 RUN pwd
 RUN ls -la
+
+RUN chown -R pptruser:pptruser /app
+
+# Run everything after as non-privileged user.
+USER pptruser
+WORKDIR /app
 
 CMD ["yarn", "start:prod"]
