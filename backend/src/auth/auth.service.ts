@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { GqlClientService } from 'src/gql-client/gql-client.service';
 import { Login, LoginQuery } from './../gql/gql-interfaces';
 
