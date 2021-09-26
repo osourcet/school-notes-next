@@ -15,6 +15,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.16.0
+
+      - name: Create Privacy html
+        run: |
+          echo $privacy > frontend/public/privacy.html
+        env:
+          privacy: ${{ secrets.PRIVACY }}
       - run: |
           sh production.sh
 
