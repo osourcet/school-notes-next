@@ -46,7 +46,7 @@
                                 cols="12"
                                 class="d-flex justify-center align-center"
                             >
-                                School Notes ist ein App, in der man Notizen /
+                                School Notes ist eine App, in der man Notizen /
                                 Erinnerungen, z. B. für Hausaufgaben und Test,
                                 anlegen kann. <br /><br />Klicke auf "Weiter" um
                                 das Tutorial zu starten.
